@@ -114,8 +114,27 @@ export default function CoachApp({ user, initialClients }: { user: { name: strin
             U={U}
           />
         )}
-        {screen === "analytics" && <Analytics />}
-        {screen === "settings" && <Settings onToast={showToast} user={user} />}
+      {screen === "analytics" && <Analytics />}
+      {screen === "settings" && <Settings onToast={showToast} user={user} />}
+    </>
+  );
+
+  if (isDesktop) {
+    return (
+      <DesktopFrame nav={COACH_NAV} current={screen} onNavigate={(k) => go(k as Screen)}>
+        <Toast msg={toast} />
+        <div style={css("padding:24px 0 80px")}>{screens}</div>
+      </DesktopFrame>
+    );
+  }
+
+  return (
+    <PhoneFrame>
+      <StatusBar />
+      <Toast msg={toast} />
+
+      <div className="cc-scroll" style={css("flex:1;overflow-y:auto;position:relative;background:#0A0E0F")}>
+        {screens}
       </div>
 
       {screen !== "live" && <BottomNav screen={screen} go={go} />}

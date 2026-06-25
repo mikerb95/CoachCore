@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { css } from "@/lib/css";
-import { PhoneFrame, StatusBar, Toast } from "@/components/Frame";
+import { PhoneFrame, DesktopFrame, StatusBar, Toast, useIsDesktop, type NavItem } from "@/components/Frame";
 import { AccountActions } from "@/components/AccountActions";
 import { MachineInventory } from "@/components/Machines";
 import { saveCheckin as saveCheckinDB, sendMyMessage } from "@/app/actions/data";
@@ -12,6 +12,14 @@ const ACTION = "#FF7A1A";
 const U = "kg";
 
 type Screen = "home" | "log" | "machines" | "progress" | "coach" | "celebrate";
+
+const CLIENT_NAV: NavItem[] = [
+  { key: "home", icon: "ph-fill ph-house", label: "Hoy" },
+  { key: "machines", icon: "ph-fill ph-squares-four", label: "Máquinas" },
+  { key: "log", icon: "ph-fill ph-barbell", label: "Entrenar", accent: true },
+  { key: "progress", icon: "ph-fill ph-chart-line-up", label: "Progreso" },
+  { key: "coach", icon: "ph-fill ph-chat-circle", label: "Coach" },
+];
 type Msg = { from: "me" | "coach"; text: string; time: string };
 type SetEntry = { w?: number; r?: number; done?: boolean };
 
