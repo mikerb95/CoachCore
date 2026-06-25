@@ -599,8 +599,8 @@ function Coach({ messages, draft, setDraft, send }: { messages: Msg[]; draft: st
             style={css("flex:1;background:none;border:none;outline:none;color:#fff;font:500 13.5px 'IBM Plex Sans'")}
           />
         </div>
-        <button onClick={send} style={css("width:46px;height:46px;border-radius:13px;border:none;background:var(--data);color:#06140C;font-size:19px;cursor:pointer;display:flex;align-items:center;justify-content:center")}>
-          <i className="ph-fill ph-paper-plane-right" />
+        <button onClick={send} aria-label="Enviar mensaje" style={css("width:46px;height:46px;border-radius:13px;border:none;background:var(--data);color:#06140C;font-size:19px;cursor:pointer;display:flex;align-items:center;justify-content:center")}>
+          <i className="ph-fill ph-paper-plane-right" aria-hidden="true" />
         </button>
       </div>
     </div>
