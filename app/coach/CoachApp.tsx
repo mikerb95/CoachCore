@@ -295,8 +295,8 @@ function Roster({
       <div style={css("padding:8px 18px 110px;animation:ccUp .45s cubic-bezier(.2,.8,.2,1)")}>
         <div style={css("display:flex;align-items:center;justify-content:space-between;margin-bottom:4px")}>
           <div style={css("font:700 30px 'Space Grotesk';color:#fff;letter-spacing:-.6px")}>Clientes</div>
-          <button onClick={() => setAdding((v) => !v)} style={css("width:40px;height:40px;border-radius:12px;border:none;background:var(--action);color:#1a0c00;font-size:20px;cursor:pointer;display:flex;align-items:center;justify-content:center")}>
-            <i className={adding ? "ph-bold ph-x" : "ph-bold ph-plus"} />
+          <button onClick={() => setAdding((v) => !v)} aria-label={adding ? "Cerrar formulario" : "Añadir cliente"} aria-expanded={adding} style={css("width:40px;height:40px;border-radius:12px;border:none;background:var(--action);color:#1a0c00;font-size:20px;cursor:pointer;display:flex;align-items:center;justify-content:center")}>
+            <i className={adding ? "ph-bold ph-x" : "ph-bold ph-plus"} aria-hidden="true" />
           </button>
         </div>
         <div style={css("font:500 13px 'IBM Plex Sans';color:#6E7A76;margin-bottom:16px")}>{roster.length} en tu cartera · BD</div>
@@ -406,8 +406,8 @@ function Roster({
               <button onClick={onStats} style={css("flex:1;height:50px;border:none;border-radius:14px;background:var(--data);color:#06140C;font:700 14px 'IBM Plex Sans';display:flex;align-items:center;justify-content:center;gap:7px;cursor:pointer")}>
                 <i className="ph-bold ph-chart-line-up" />Ver estadísticas
               </button>
-              <button onClick={() => onStartSession(p.id)} style={css("flex:none;width:50px;height:50px;border:1px solid rgba(255,255,255,.1);border-radius:14px;background:#171E21;color:var(--action);font-size:20px;cursor:pointer")}>
-                <i className="ph-fill ph-play" />
+              <button onClick={() => onStartSession(p.id)} aria-label={`Iniciar sesión con ${p.name}`} style={css("flex:none;width:50px;height:50px;border:1px solid rgba(255,255,255,.1);border-radius:14px;background:#171E21;color:var(--action);font-size:20px;cursor:pointer")}>
+                <i className="ph-fill ph-play" aria-hidden="true" />
               </button>
               <button onClick={() => onDelete(p.realId)} style={css("flex:none;width:50px;height:50px;border:1px solid rgba(255,107,138,.25);border-radius:14px;background:rgba(255,107,138,.06);color:#FF6B8A;font-size:19px;cursor:pointer")}>
                 <i className="ph ph-trash" />
