@@ -4,12 +4,13 @@ import { useEffect, useRef, useState } from "react";
 import { css } from "@/lib/css";
 import { PhoneFrame, StatusBar, Toast } from "@/components/Frame";
 import { AccountActions } from "@/components/AccountActions";
+import { MachineInventory } from "@/components/Machines";
 
 const DATA = "#38E07B";
 const ACTION = "#FF7A1A";
 const U = "kg";
 
-type Screen = "home" | "log" | "progress" | "coach" | "celebrate";
+type Screen = "home" | "log" | "machines" | "progress" | "coach" | "celebrate";
 type Msg = { from: "me" | "coach"; text: string; time: string };
 type SetEntry = { w?: number; r?: number; done?: boolean };
 
@@ -114,6 +115,7 @@ export default function ClientApp({ user }: { user: { name: string; email: strin
             nextEx={() => setEx((e) => { if (e >= exercises.length - 1) { setScreen("celebrate"); return e; } return e + 1; })}
           />
         )}
+        {screen === "machines" && <MachineInventory />}
         {screen === "progress" && <Progress />}
         {screen === "coach" && (
           <Coach messages={messages || seed()} draft={draft} setDraft={setDraft} send={send} />
