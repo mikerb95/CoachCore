@@ -1,9 +1,9 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import Link from "next/link";
 import { css } from "@/lib/css";
 import { PhoneFrame, StatusBar, Toast } from "@/components/Frame";
+import { AccountActions } from "@/components/AccountActions";
 
 const DATA = "#38E07B";
 const ACTION = "#FF7A1A";
