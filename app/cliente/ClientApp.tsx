@@ -175,6 +175,25 @@ export default function ClientApp({ user }: { user: { name: string; email: strin
             onHome={() => setScreen("home")}
           />
         )}
+    </>
+  );
+
+  if (isDesktop) {
+    return (
+      <DesktopFrame nav={CLIENT_NAV} current={screen} onNavigate={(k) => setScreen(k as Screen)}>
+        <Toast msg={toast} />
+        <div style={css("padding:24px 0 80px")}>{screens}</div>
+      </DesktopFrame>
+    );
+  }
+
+  return (
+    <PhoneFrame>
+      <StatusBar />
+      <Toast msg={toast} />
+
+      <div className="cc-scroll" style={css("flex:1;overflow-y:auto;position:relative;background:#0A0E0F")}>
+        {screens}
       </div>
 
       {screen !== "celebrate" && <BottomNav screen={screen} go={setScreen} />}
