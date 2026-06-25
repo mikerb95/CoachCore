@@ -1,7 +1,23 @@
 "use client";
 
-import type { ReactNode } from "react";
+import { useEffect, useState, type ReactNode } from "react";
 import { css } from "@/lib/css";
+
+/**
+ * `true` once the viewport is desktop-width. Returns `false` during SSR and the
+ * first client render so hydration matches, then updates on mount / resize.
+ */
+export function useIsDesktop(query = "(min-width: 1024px)") {
+  const [isDesktop, setIsDesktop] = useState(false);
+  useEffect(() => {
+    const mq = window.matchMedia(query);
+    const update = () => setIsDesktop(mq.matches);
+    update();
+    mq.addEventListener("change", update);
+    return () => mq.removeEventListener("change", update);
+  }, [query]);
+  return isDesktop;
+}
 
 /** Phosphor icon helper. `name` is e.g. "ph-fill ph-house". */
 export function Icon({ name, style }: { name: string; style?: React.CSSProperties }) {
