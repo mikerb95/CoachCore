@@ -1,16 +1,21 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useTransition } from "react";
+import { useRouter } from "next/navigation";
 import { css } from "@/lib/css";
 import { PhoneFrame, StatusBar, Toast } from "@/components/Frame";
 import { AccountActions } from "@/components/AccountActions";
 import { MachineInventory } from "@/components/Machines";
 import { machines, MachineIllo } from "@/lib/machines";
-import { DATA, ACTION, MUTED, clients, byId, rawSessions, fmt } from "./data";
+import { DATA, ACTION, MUTED, clients, byId, rawSessions, fmt, presentClient, type RawClient, type PresentedClient } from "./data";
+import { createClient, deleteClient, seedDemoClients } from "@/app/actions/data";
 
 type Screen = "dashboard" | "roster" | "builder" | "live" | "analytics" | "settings" | "machines";
 
-export default function CoachApp({ user }: { user: { name: string; email: string } }) {
+export default function CoachApp({ user, initialClients }: { user: { name: string; email: string }; initialClients: RawClient[] }) {
+  const router = useRouter();
+  const [, startTransition] = useTransition();
+  const roster: PresentedClient[] = initialClients.map(presentClient);
   const [screen, setScreen] = useState<Screen>("dashboard");
   const [query, setQuery] = useState("");
   const [profileId, setProfileId] = useState<number | null>(null);
