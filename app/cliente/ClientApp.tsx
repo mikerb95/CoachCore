@@ -611,6 +611,10 @@ function BottomNav({ screen, go }: { screen: Screen; go: (s: Screen) => void }) 
         <i className="ph-fill ph-house" style={{ fontSize: 22, color: col("home") }} />
         <span style={{ ...css("font:600 9.5px 'IBM Plex Sans'"), color: col("home") }}>Hoy</span>
       </button>
+      <button onClick={() => go("machines")} style={css("background:none;border:none;display:flex;flex-direction:column;align-items:center;gap:4px;cursor:pointer;flex:1")}>
+        <i className="ph-fill ph-squares-four" style={{ fontSize: 22, color: col("machines") }} />
+        <span style={{ ...css("font:600 9.5px 'IBM Plex Sans'"), color: col("machines") }}>Máquinas</span>
+      </button>
       <button onClick={() => go("log")} style={css("background:none;border:none;display:flex;flex-direction:column;align-items:center;gap:5px;cursor:pointer;flex:1")}>
         <span style={css("width:44px;height:34px;border-radius:12px;background:var(--data);display:flex;align-items:center;justify-content:center;box-shadow:0 6px 18px rgba(56,224,123,.32)")}>
           <i className="ph-bold ph-barbell" style={css("font-size:19px;color:#06140C")} />
