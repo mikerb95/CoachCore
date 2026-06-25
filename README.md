@@ -56,8 +56,33 @@ App PWA para entrenadores personales (Next.js App Router + Auth.js + Neon Postgr
 - **Derechos del usuario** desde la propia app: exportar datos (portabilidad) y eliminar cuenta (supresión).
 - Política de privacidad en `/privacidad` (plantilla base — revísala con asesoría legal y rellena el responsable del tratamiento).
 
-## Pendiente / siguientes pasos
+## Datos reales vs demo (estado actual)
 
-- Los datos de entreno que se muestran en las apps siguen siendo **demo**; el login, los roles, los usuarios y las medidas de seguridad/privacidad son reales. Falta migrar el contenido de clientes/sesiones/medidas a tablas propias por usuario.
-- **Rate limiting** de login: en producción conviene Upstash Redis (`@upstash/ratelimit`) — ahora mismo no hay límite de intentos a nivel de app.
-- Opcional: 2FA / passkeys, verificación de email, recuperación de contraseña.
+**Ya persisten en Postgres:**
+- Usuarios, roles y consentimiento RGPD.
+- **Roster del entrenador**: listar / añadir / eliminar clientes + cargar roster de ejemplo (pantalla *Clientes*).
+- **Check-ins del cliente** (peso, sueño, energía, molestias) → tabla `checkins` + medida de peso en `measurements`.
+- **Mensajes** cliente ⇄ entrenador → tabla `messages`.
+- **Recuperación de contraseña** (tokens con hash + caducidad).
+
+**Todavía demo (presentación):**
+- Dashboard "sesiones de hoy" y la **sesión en vivo** del entrenador (usan el roster de ejemplo con IDs numéricos).
+- Gráficas de analítica/progreso y el inventario de máquinas.
+- Las estadísticas del perfil de cliente (`—` hasta calcularlas de sesiones reales).
+
+## Recuperación de contraseña
+
+- `/recuperar` → envía un enlace (válido 1 h) con `requestPasswordReset`.
+- `/restablecer?token=…` → fija la nueva contraseña con `resetPassword`.
+- Sin `RESEND_API_KEY`, el enlace se imprime en consola (útil en local).
+
+## Rate limiting
+
+- Limitador de ventana deslizante **en memoria** (`lib/rateLimit.ts`): login (5/5 min por IP+email) y solicitud de reset (3/15 min por IP).
+- Para multi-instancia, define las variables `UPSTASH_*` e instala `@upstash/ratelimit @upstash/redis`.
+
+## Siguientes pasos sugeridos
+
+- Migrar el resto del dominio del entrenador (sesiones programadas, sesión en vivo, analítica) a tablas reales por cliente.
+- Vincular cuentas cliente ⇄ entrenador con un flujo de invitación.
+- Opcional: 2FA / passkeys, verificación de email.
