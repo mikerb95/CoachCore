@@ -89,6 +89,30 @@ export default function ClientApp({ user }: { user: { name: string; email: strin
     setDraft("");
   };
 
+  // Real per-machine history: the exercises in this client's routine that use
+  // the machine, showing what was actually logged this session (or the target).
+  const machineHistory = (machineId: string) => {
+    const out: { when: string; val: string }[] = [];
+    exercises.forEach((e, idx) => {
+      if (e.machineId !== machineId) return;
+      const done: SetEntry[] = [];
+      for (let i = 1; i <= e.count; i++) {
+        const s = sets[idx + "-" + i];
+        if (s && s.done) done.push(s);
+      }
+      if (done.length) {
+        const last = done[done.length - 1];
+        const w = last.w != null ? last.w : e.w;
+        const r = last.r != null ? last.r : e.r;
+        out.push({ when: e.name, val: `${w}${U} × ${r} · ${done.length}/${e.count} series` });
+      } else {
+        out.push({ when: e.name, val: `${e.w}${U} × ${e.r} · objetivo` });
+      }
+      out.push({ when: "↳ Sesión anterior", val: e.prev });
+    });
+    return out;
+  };
+
   return (
     <PhoneFrame>
       <StatusBar />

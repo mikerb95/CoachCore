@@ -96,5 +96,5 @@ export async function resetPassword(_prev: ResetState, formData: FormData): Prom
     .set({ usedAt: new Date() })
     .where(eq(passwordResetTokens.id, record.id));
 
-  return {};
+  return { ok: true };
 }
