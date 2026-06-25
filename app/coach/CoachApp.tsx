@@ -4,9 +4,11 @@ import { useEffect, useRef, useState } from "react";
 import { css } from "@/lib/css";
 import { PhoneFrame, StatusBar, Toast } from "@/components/Frame";
 import { AccountActions } from "@/components/AccountActions";
+import { MachineInventory } from "@/components/Machines";
+import { machines, MachineIllo } from "@/lib/machines";
 import { DATA, ACTION, MUTED, clients, byId, rawSessions, fmt } from "./data";
 
-type Screen = "dashboard" | "roster" | "builder" | "live" | "analytics" | "settings";
+type Screen = "dashboard" | "roster" | "builder" | "live" | "analytics" | "settings" | "machines";
 
 export default function CoachApp({ user }: { user: { name: string; email: string } }) {
   const [screen, setScreen] = useState<Screen>("dashboard");
@@ -66,7 +68,8 @@ export default function CoachApp({ user }: { user: { name: string; email: string
       <Toast msg={toast} />
 
       <div className="cc-scroll" style={css("flex:1;overflow-y:auto;position:relative;background:#0A0E0F")}>
-        {screen === "dashboard" && <Dashboard onStart={startSession} />}
+        {screen === "dashboard" && <Dashboard onStart={startSession} onMachines={() => setScreen("machines")} />}
+        {screen === "machines" && <MachineInventory onBack={() => go("dashboard")} />}
         {screen === "roster" && (
           <Roster
             query={query}
