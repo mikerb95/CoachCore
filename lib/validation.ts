@@ -1,0 +1,31 @@
+import { z } from "zod";
+
+export const emailSchema = z.string().trim().toLowerCase().email("Email no válido").max(254);
+
+// Política de contraseñas: mínimo 10, mezcla básica. Se valida en cliente y servidor.
+export const passwordSchema = z
+  .string()
+  .min(10, "Mínimo 10 caracteres")
+  .max(200, "Demasiado larga")
+  .regex(/[a-z]/, "Incluye una minúscula")
+  .regex(/[A-Z]/, "Incluye una mayúscula")
+  .regex(/[0-9]/, "Incluye un número");
+
+export const roleSchema = z.enum(["entrenador", "cliente"]);
+
+export const registerSchema = z.object({
+  name: z.string().trim().min(2, "Nombre demasiado corto").max(80),
+  email: emailSchema,
+  password: passwordSchema,
+  role: roleSchema,
+  consentHealthData: z.literal(true, {
+    errorMap: () => ({ message: "Debes aceptar el tratamiento de datos para continuar" }),
+  }),
+});
+
+export const loginSchema = z.object({
+  email: emailSchema,
+  password: z.string().min(1, "Introduce tu contraseña").max(200),
+});
+
+export type RegisterInput = z.infer<typeof registerSchema>;
