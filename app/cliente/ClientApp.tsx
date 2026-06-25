@@ -31,7 +31,7 @@ const seed = (): Msg[] => [
   { from: "coach", text: "Normal, subimos carga. Hoy cuida la lumbar y avísame cómo va la sentadilla.", time: "8:16" },
 ];
 
-export default function ClientApp() {
+export default function ClientApp({ user }: { user: { name: string; email: string } }) {
   const [screen, setScreen] = useState<Screen>("home");
   const [weight, setWeight] = useState(78.4);
   const [sleep, setSleep] = useState(7.5);
