@@ -38,7 +38,11 @@ function weeklyBars(uses: number) {
   return vals.map((v, i) => ({ h: Math.round((v / max) * 64) + 8, label: "S" + (i + 1), last: i === 7 }));
 }
 
-function history(m: Machine) {
+export type HistoryEntry = { when: string; val: string };
+
+// Fallback sample history, used only when the host app doesn't provide a real
+// machineId → log mapping (e.g. cardio machines with no logged sets).
+function mockHistory(m: Machine): HistoryEntry[] {
   if (m.category === "cardio") {
     return [
       { when: "Hoy", val: "24 min · 312 kcal" },
@@ -55,7 +59,13 @@ function history(m: Machine) {
   ];
 }
 
-export function MachineInventory({ onBack }: { onBack?: () => void }) {
+export function MachineInventory({
+  onBack,
+  historyFor,
+}: {
+  onBack?: () => void;
+  historyFor?: (machineId: string) => HistoryEntry[];
+}) {
   const [cat, setCat] = useState<MachineCategory | "all">("all");
   const [sel, setSel] = useState<Machine | null>(null);
 
@@ -114,15 +124,26 @@ export function MachineInventory({ onBack }: { onBack?: () => void }) {
         </div>
       </div>
 
-      {sel && <MachineSheet machine={sel} onClose={() => setSel(null)} />}
+      {sel && <MachineSheet machine={sel} onClose={() => setSel(null)} historyFor={historyFor} />}
     </>
   );
 }
 
-function MachineSheet({ machine, onClose }: { machine: Machine; onClose: () => void }) {
+function MachineSheet({
+  machine,
+  onClose,
+  historyFor,
+}: {
+  machine: Machine;
+  onClose: () => void;
+  historyFor?: (machineId: string) => HistoryEntry[];
+}) {
   const st = statusMeta[machine.status];
   const bars = weeklyBars(machine.uses30d);
-  const log = history(machine);
+  const provided = historyFor?.(machine.id);
+  // Real machineId-linked entries when available; otherwise the sample log.
+  const log = provided ?? mockHistory(machine);
+  const real = provided != null;
   const catLabel = CATEGORIES.find((c) => c.key === machine.category)?.label ?? "";
 
   return (
@@ -162,15 +183,23 @@ function MachineSheet({ machine, onClose }: { machine: Machine; onClose: () => v
           </div>
         </div>
 
-        <div style={css("font:600 11px 'IBM Plex Sans';color:#5E6A66;letter-spacing:.4px;text-transform:uppercase;margin-bottom:9px")}>Tu historial</div>
-        <div style={css("background:#12181A;border:1px solid rgba(255,255,255,.05);border-radius:16px;overflow:hidden;margin-bottom:18px")}>
-          {log.map((h, i) => (
-            <div key={i} style={{ ...css("display:flex;align-items:center;justify-content:space-between;padding:12px 14px"), borderBottom: i < log.length - 1 ? "1px solid rgba(255,255,255,.04)" : "none" }}>
-              <span style={css("font:500 12.5px 'IBM Plex Sans';color:#9FA8A3")}>{h.when}</span>
-              <span style={css("font:700 13px 'JetBrains Mono';color:#fff")}>{h.val}</span>
-            </div>
-          ))}
+        <div style={css("font:600 11px 'IBM Plex Sans';color:#5E6A66;letter-spacing:.4px;text-transform:uppercase;margin-bottom:9px")}>
+          {real ? "Ejercicios en tu rutina" : "Tu historial"}
         </div>
+        {log.length === 0 ? (
+          <div style={css("background:#12181A;border:1px solid rgba(255,255,255,.05);border-radius:16px;padding:18px 14px;margin-bottom:18px;text-align:center;font:500 12.5px 'IBM Plex Sans';color:#6E7A76")}>
+            Esta máquina aún no está en tu rutina actual.
+          </div>
+        ) : (
+          <div style={css("background:#12181A;border:1px solid rgba(255,255,255,.05);border-radius:16px;overflow:hidden;margin-bottom:18px")}>
+            {log.map((h, i) => (
+              <div key={i} style={{ ...css("display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 14px"), borderBottom: i < log.length - 1 ? "1px solid rgba(255,255,255,.04)" : "none" }}>
+                <span style={css("font:500 12.5px 'IBM Plex Sans';color:#9FA8A3;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap")}>{h.when}</span>
+                <span style={css("font:700 13px 'JetBrains Mono';color:#fff;flex:none")}>{h.val}</span>
+              </div>
+            ))}
+          </div>
+        )}
 
         <button onClick={onClose} style={css("width:100%;height:48px;border:1px solid rgba(255,255,255,.1);border-radius:14px;background:#171E21;color:#C6CFCB;font:600 14px 'IBM Plex Sans';cursor:pointer")}>Cerrar</button>
       </div>
