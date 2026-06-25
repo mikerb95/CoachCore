@@ -5,6 +5,7 @@ import { css } from "@/lib/css";
 import { PhoneFrame, StatusBar, Toast } from "@/components/Frame";
 import { AccountActions } from "@/components/AccountActions";
 import { MachineInventory } from "@/components/Machines";
+import { saveCheckin as saveCheckinDB, sendMyMessage } from "@/app/actions/data";
 
 const DATA = "#38E07B";
 const ACTION = "#FF7A1A";
