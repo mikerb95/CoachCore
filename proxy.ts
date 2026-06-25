@@ -31,8 +31,9 @@ export default auth((req) => {
     // Next.js inyecta el nonce en sus scripts; strict-dynamic permite los que cargan ellos.
     `script-src 'self' 'nonce-${nonce}' 'strict-dynamic' ${isDev ? "'unsafe-eval'" : ""}`.trim(),
     // 'unsafe-inline' necesario para los atributos style del diseño y los <style> de next/font.
-    `style-src 'self' 'unsafe-inline' https://unpkg.com`,
-    `font-src 'self' https://unpkg.com data:`,
+    // Iconos auto-hospedados: ya no se permite ningún CDN externo.
+    `style-src 'self' 'unsafe-inline'`,
+    `font-src 'self' data:`,
     `img-src 'self' data: blob:`,
     `connect-src 'self'${isDev ? " ws:" : ""}`,
     `object-src 'none'`,

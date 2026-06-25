@@ -37,9 +37,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="es">
       <head>
-        <link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/regular/style.css" />
-        <link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/fill/style.css" />
-        <link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/bold/style.css" />
+        {/* Iconos Phosphor auto-hospedados (sin CDN externo): integridad de cadena de suministro + 100% offline. */}
+        <link rel="stylesheet" href="/phosphor/regular/style.css" />
+        <link rel="stylesheet" href="/phosphor/fill/style.css" />
+        <link rel="stylesheet" href="/phosphor/bold/style.css" />
       </head>
       <body className={`${spaceGrotesk.variable} ${ibmPlex.variable} ${jetbrains.variable}`}>
         {children}
