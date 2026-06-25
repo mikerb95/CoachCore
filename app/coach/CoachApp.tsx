@@ -177,6 +177,27 @@ function Dashboard({ onStart, onMachines }: { onStart: (id: number) => void; onM
         ))}
       </div>
 
+      <div onClick={onMachines} style={css("background:#12181A;border:1px solid rgba(255,255,255,.05);border-radius:18px;padding:14px;margin-bottom:24px;cursor:pointer")}>
+        <div style={css("display:flex;align-items:center;justify-content:space-between;margin-bottom:12px")}>
+          <div style={css("display:flex;align-items:center;gap:8px")}>
+            <i className="ph-fill ph-squares-four" style={css("color:var(--data);font-size:18px")} />
+            <span style={css("font:600 15px 'Space Grotesk';color:#E6ECEA")}>Equipamiento del gym</span>
+          </div>
+          <i className="ph ph-caret-right" style={css("color:#4A554F;font-size:16px")} />
+        </div>
+        <div style={css("display:flex;align-items:center;gap:8px")}>
+          {previewIllos.map((id) => (
+            <div key={id} style={css("width:52px;height:52px;border-radius:12px;background:#0A0F11;border:1px solid rgba(255,255,255,.04);display:flex;align-items:center;justify-content:center")}>
+              <MachineIllo id={id} size={46} />
+            </div>
+          ))}
+          <div style={css("flex:1;text-align:right")}>
+            <div style={css("font:700 20px 'Space Grotesk';color:#fff")}>{machines.length}</div>
+            <div style={css("font:500 10.5px 'IBM Plex Sans';color:#6E7A76")}>{maintenance > 0 ? maintenance + " en mantenim." : "todas operativas"}</div>
+          </div>
+        </div>
+      </div>
+
       <div style={css("display:flex;align-items:center;justify-content:space-between;margin-bottom:12px")}>
         <div style={css("font:600 16px 'Space Grotesk';color:#E6ECEA")}>Sesiones de hoy</div>
         <div style={css("font:600 12px 'IBM Plex Sans';color:#6E7A76;background:#12181A;padding:3px 9px;border-radius:20px")}>5 agendadas</div>
