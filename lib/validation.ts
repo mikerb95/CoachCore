@@ -18,9 +18,9 @@ export const registerSchema = z.object({
   email: emailSchema,
   password: passwordSchema,
   role: roleSchema,
-  consentHealthData: z.literal(true, {
-    errorMap: () => ({ message: "Debes aceptar el tratamiento de datos para continuar" }),
-  }),
+  consentHealthData: z
+    .boolean()
+    .refine((v) => v === true, { message: "Debes aceptar el tratamiento de datos para continuar" }),
 });
 
 export const loginSchema = z.object({
