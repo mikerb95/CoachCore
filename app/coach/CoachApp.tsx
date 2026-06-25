@@ -22,6 +22,7 @@ const COACH_NAV: NavItem[] = [
 
 export default function CoachApp({ user, initialClients }: { user: { name: string; email: string }; initialClients: RawClient[] }) {
   const router = useRouter();
+  const isDesktop = useIsDesktop();
   const [, startTransition] = useTransition();
   const roster: PresentedClient[] = initialClients.map(presentClient);
   const [screen, setScreen] = useState<Screen>("dashboard");
@@ -80,15 +81,11 @@ export default function CoachApp({ user, initialClients }: { user: { name: strin
 
   const U = "kg";
 
-  return (
-    <PhoneFrame>
-      <StatusBar />
-      <Toast msg={toast} />
-
-      <div className="cc-scroll" style={css("flex:1;overflow-y:auto;position:relative;background:#0A0E0F")}>
-        {screen === "dashboard" && <Dashboard onStart={startSession} onMachines={() => setScreen("machines")} />}
-        {screen === "machines" && <MachineInventory onBack={() => go("dashboard")} historyFor={coachHistoryFor} />}
-        {screen === "roster" && (
+  const screens = (
+    <>
+      {screen === "dashboard" && <Dashboard onStart={startSession} onMachines={() => setScreen("machines")} />}
+      {screen === "machines" && <MachineInventory onBack={() => go("dashboard")} historyFor={coachHistoryFor} />}
+      {screen === "roster" && (
           <Roster
             clients={roster}
             query={query}
