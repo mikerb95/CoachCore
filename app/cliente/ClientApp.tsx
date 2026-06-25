@@ -140,13 +140,9 @@ export default function ClientApp({ user }: { user: { name: string; email: strin
     return out;
   };
 
-  return (
-    <PhoneFrame>
-      <StatusBar />
-      <Toast msg={toast} />
-
-      <div className="cc-scroll" style={css("flex:1;overflow-y:auto;position:relative;background:#0A0E0F")}>
-        {screen === "home" && (
+  const screens = (
+    <>
+      {screen === "home" && (
           <Home
             user={user}
             weight={weight} sleep={sleep} energy={energy} soreness={soreness} saved={checkinSaved}
