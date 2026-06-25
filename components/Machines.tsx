@@ -75,8 +75,8 @@ export function MachineInventory({
     <>
       <div style={css("padding:8px 18px 110px;animation:ccUp .45s cubic-bezier(.2,.8,.2,1)")}>
         {onBack && (
-          <button onClick={onBack} style={css("width:40px;height:40px;border-radius:12px;border:1px solid rgba(255,255,255,.08);background:#12181A;color:#C6CFCB;font-size:18px;cursor:pointer;margin-bottom:10px")}>
-            <i className="ph-bold ph-caret-left" />
+          <button onClick={onBack} aria-label="Volver" style={css("width:40px;height:40px;border-radius:12px;border:1px solid rgba(255,255,255,.08);background:#12181A;color:#C6CFCB;font-size:18px;cursor:pointer;margin-bottom:10px")}>
+            <i className="ph-bold ph-caret-left" aria-hidden="true" />
           </button>
         )}
         <div style={css("font:700 30px 'Space Grotesk';color:#fff;letter-spacing:-.6px;margin-bottom:4px")}>Máquinas</div>
@@ -106,7 +106,12 @@ export function MachineInventory({
           {list.map((m) => {
             const st = statusMeta[m.status];
             return (
-              <div key={m.id} onClick={() => setSel(m)} style={css("background:#12181A;border:1px solid rgba(255,255,255,.05);border-radius:16px;padding:12px;cursor:pointer")}>
+              <button
+                key={m.id}
+                onClick={() => setSel(m)}
+                aria-label={`${m.name}. ${m.muscle}. Estado: ${st.label}. ${m.uses30d} usos en 30 días`}
+                style={css("display:block;text-align:left;width:100%;font:inherit;color:inherit;background:#12181A;border:1px solid rgba(255,255,255,.05);border-radius:16px;padding:12px;cursor:pointer")}
+              >
                 <div style={css("height:84px;border-radius:12px;background:#0E1416;border:1px solid rgba(255,255,255,.04);display:flex;align-items:center;justify-content:center;margin-bottom:10px")}>
                   <MachineIllo id={m.id} size={88} />
                 </div>
@@ -114,11 +119,11 @@ export function MachineInventory({
                 <div style={css("font:500 11px 'IBM Plex Sans';color:#6E7A76;margin-top:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis")}>{m.muscle}</div>
                 <div style={css("display:flex;align-items:center;justify-content:space-between;margin-top:9px")}>
                   <span style={{ ...css("display:inline-flex;align-items:center;gap:5px;font:600 10.5px 'IBM Plex Sans';padding:3px 8px;border-radius:7px"), color: st.col, background: st.bg }}>
-                    <span style={{ ...css("width:5px;height:5px;border-radius:50%"), background: st.col }} />{st.label}
+                    <span style={{ ...css("width:5px;height:5px;border-radius:50%"), background: st.col }} aria-hidden="true" />{st.label}
                   </span>
                   <span style={css("font:500 10px 'JetBrains Mono';color:#5E6A66")}>{m.uses30d}↑</span>
                 </div>
-              </div>
+              </button>
             );
           })}
         </div>

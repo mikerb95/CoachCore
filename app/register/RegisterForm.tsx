@@ -25,9 +25,9 @@ export default function RegisterForm() {
           <RoleCard active={role === "cliente"} onClick={() => setRole("cliente")} icon="ph-fill ph-person-simple-run" label="Cliente" color="var(--action)" />
         </div>
 
-        <Field icon="ph ph-user" name="name" type="text" placeholder="Nombre y apellidos" autoComplete="name" error={fe.name} />
-        <Field icon="ph ph-envelope-simple" name="email" type="email" placeholder="tu@email.com" autoComplete="email" error={fe.email} />
-        <Field icon="ph ph-lock-simple" name="password" type="password" placeholder="Contraseña (mín. 10)" autoComplete="new-password" error={fe.password} />
+        <Field icon="ph ph-user" name="name" type="text" placeholder="Nombre y apellidos" autoComplete="name" error={fe.name} label="Nombre y apellidos" />
+        <Field icon="ph ph-envelope-simple" name="email" type="email" placeholder="tu@email.com" autoComplete="email" error={fe.email} label="Correo electrónico" />
+        <Field icon="ph ph-lock-simple" name="password" type="password" placeholder="Contraseña (mín. 10)" autoComplete="new-password" error={fe.password} label="Contraseña" />
 
         {/* RGPD consent */}
         <label style={css("display:flex;gap:10px;align-items:flex-start;background:#0F1517;border:1px solid rgba(255,255,255,.06);border-radius:14px;padding:13px;cursor:pointer")}>
@@ -71,12 +71,12 @@ function RoleCard({ active, onClick, icon, label, color }: { active: boolean; on
   );
 }
 
-function Field({ icon, name, type, placeholder, autoComplete, error }: { icon: string; name: string; type: string; placeholder: string; autoComplete?: string; error?: string }) {
+function Field({ icon, name, type, placeholder, autoComplete, error, label }: { icon: string; name: string; type: string; placeholder: string; autoComplete?: string; error?: string; label: string }) {
   return (
     <div>
       <div style={{ ...css("display:flex;align-items:center;gap:10px;background:#12181A;border-radius:14px;padding:0 14px;height:52px"), border: `1px solid ${error ? "rgba(255,107,138,.5)" : "rgba(255,255,255,.07)"}` }}>
-        <i className={icon} style={css("color:#6E7A76;font-size:18px")} />
-        <input name={name} type={type} placeholder={placeholder} autoComplete={autoComplete} required style={css("flex:1;background:none;border:none;outline:none;color:#fff;font:500 14px 'IBM Plex Sans'")} />
+        <i className={icon} style={css("color:#6E7A76;font-size:18px")} aria-hidden="true" />
+        <input name={name} type={type} placeholder={placeholder} autoComplete={autoComplete} aria-label={label} aria-invalid={!!error} required style={css("flex:1;background:none;border:none;outline:none;color:#fff;font:500 14px 'IBM Plex Sans'")} />
       </div>
       {error && <div style={css("font:500 11.5px 'IBM Plex Sans';color:#FF6B8A;margin:5px 0 0 4px")}>{error}</div>}
     </div>

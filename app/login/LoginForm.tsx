@@ -56,15 +56,16 @@ export default function LoginForm({ justRegistered }: { justRegistered: boolean 
   );
 }
 
-function Field({ icon, name, type, placeholder, autoComplete }: { icon: string; name: string; type: string; placeholder: string; autoComplete?: string }) {
+function Field({ icon, name, type, placeholder, autoComplete, label }: { icon: string; name: string; type: string; placeholder: string; autoComplete?: string; label: string }) {
   return (
     <div style={css("display:flex;align-items:center;gap:10px;background:#12181A;border:1px solid rgba(255,255,255,.07);border-radius:14px;padding:0 14px;height:52px")}>
-      <i className={icon} style={css("color:#6E7A76;font-size:18px")} />
+      <i className={icon} style={css("color:#6E7A76;font-size:18px")} aria-hidden="true" />
       <input
         name={name}
         type={type}
         placeholder={placeholder}
         autoComplete={autoComplete}
+        aria-label={label}
         required
         style={css("flex:1;background:none;border:none;outline:none;color:#fff;font:500 14px 'IBM Plex Sans'")}
       />
