@@ -86,3 +86,9 @@ App PWA para entrenadores personales (Next.js App Router + Auth.js + Neon Postgr
 - Migrar el resto del dominio del entrenador (sesiones programadas, sesión en vivo, analítica) a tablas reales por cliente.
 - Vincular cuentas cliente ⇄ entrenador con un flujo de invitación.
 - Opcional: 2FA / passkeys, verificación de email.
+
+## Licencia
+
+**Propietaria — Todos los derechos reservados.** Este software no es de código
+abierto. Queda prohibido usar, copiar, modificar o distribuir el código sin
+autorización previa y por escrito del titular del copyright. Ver [`LICENSE`](LICENSE).
