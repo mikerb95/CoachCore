@@ -58,6 +58,62 @@ function cssVars(accent: string): React.CSSProperties {
   return { ["--data" as string]: accent, ["--action" as string]: accent } as React.CSSProperties;
 }
 
+/** A single entry in the desktop sidebar. `accent` highlights the primary action. */
+export type NavItem = { key: string; icon: string; label: string; accent?: boolean };
+
+/** Sidebar nav that replaces BottomNav on desktop. */
+function DesktopNav({ nav, current, onNavigate }: { nav: NavItem[]; current: string; onNavigate: (key: string) => void }) {
+  return (
+    <aside style={css("flex:none;width:248px;height:100vh;position:sticky;top:0;background:#0A0E0F;border-right:1px solid rgba(255,255,255,.06);display:flex;flex-direction:column;padding:26px 16px;gap:4px;z-index:20")}>
+      <div style={css("display:flex;align-items:center;gap:11px;padding:0 12px 26px")}>
+        <div style={css("width:38px;height:38px;border-radius:12px;background:linear-gradient(135deg,#1d2528,#11171a);display:flex;align-items:center;justify-content:center;font:700 14px 'Space Grotesk';color:var(--data);border:1px solid rgba(255,255,255,.07)")}>CC</div>
+        <span style={css("font:700 17px 'Space Grotesk';color:#fff;letter-spacing:-.3px")}>CoachCore</span>
+      </div>
+      {nav.map((item) => {
+        const active = item.key === current;
+        const accentCol = item.accent ? "var(--action)" : "var(--data)";
+        return (
+          <button
+            key={item.key}
+            onClick={() => onNavigate(item.key)}
+            className="nav-item"
+            style={{ ...css("display:flex;align-items:center;gap:13px;padding:11px 14px;border-radius:12px;border:none;cursor:pointer;width:100%;text-align:left;transition:background .15s ease"), background: active ? "rgba(255,255,255,.05)" : "transparent" }}
+          >
+            <i className={item.icon} style={{ fontSize: 20, color: active ? accentCol : "#54605A" }} />
+            <span style={{ ...css("font:600 14px 'IBM Plex Sans'"), color: active ? "#E6ECEA" : "#8A938F" }}>{item.label}</span>
+          </button>
+        );
+      })}
+    </aside>
+  );
+}
+
+/**
+ * Desktop shell: a fixed sidebar (replacing BottomNav) plus a centred content
+ * column capped at a comfortable width. Renders the exact same screen
+ * components as PhoneFrame, so the mobile path is untouched.
+ */
+export function DesktopFrame({
+  children, nav, current, onNavigate, accent,
+}: {
+  children: ReactNode;
+  nav: NavItem[];
+  current: string;
+  onNavigate: (key: string) => void;
+  accent?: string;
+}) {
+  return (
+    <div style={{ ...css("min-height:100vh;background:radial-gradient(120% 90% at 50% 0%,#0E1416 0%,#060809 60%);display:flex;font-family:'IBM Plex Sans',system-ui,sans-serif"), ...(accent ? cssVars(accent) : {}) }}>
+      <DesktopNav nav={nav} current={current} onNavigate={onNavigate} />
+      <main className="cc-scroll" style={css("flex:1;height:100vh;overflow-y:auto;display:flex;justify-content:center;background:#0A0E0F;position:relative")}>
+        <div style={css("width:100%;max-width:880px;padding:0 32px")}>
+          {children}
+        </div>
+      </main>
+    </div>
+  );
+}
+
 /** Success toast that slides in below the status bar. */
 export function Toast({ msg }: { msg: string }) {
   if (!msg) return null;
