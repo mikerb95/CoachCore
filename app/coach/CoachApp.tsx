@@ -340,31 +340,43 @@ function Roster({
 }
 
 /* ============================ BUILDER ============================ */
+type BuilderExercise = { name: string; scheme: string; rpe: string; rm: string; rest: string; sup: string; machineId?: string };
+
+const routineBlocks: { name: string; tag: string; color: string; tagBg: string; wrapBorder: string; supWrap: string; exercises: BuilderExercise[] }[] = [
+  {
+    name: "Calentamiento", tag: "WARM-UP", color: "#5AA9FF", tagBg: "rgba(90,169,255,.12)", wrapBorder: "rgba(255,255,255,.05)", supWrap: "",
+    exercises: [
+      { name: "Movilidad de cadera", scheme: "2 × 10", rpe: "—", rm: "—", rest: "45s", sup: "" },
+      { name: "Face pull", scheme: "3 × 15", rpe: "6", rm: "—", rest: "45s", sup: "", machineId: "cable-station" },
+    ],
+  },
+  {
+    name: "Fuerza principal", tag: "FUERZA", color: ACTION, tagBg: "rgba(255,122,26,.12)", wrapBorder: "rgba(255,255,255,.05)", supWrap: "",
+    exercises: [
+      { name: "Sentadilla trasera", scheme: "5 × 5", rpe: "8", rm: "82.5%", rest: "180s", sup: "", machineId: "power-rack" },
+      { name: "Press de banca", scheme: "5 × 5", rpe: "8", rm: "80%", rest: "180s", sup: "", machineId: "bench-flat" },
+    ],
+  },
+  {
+    name: "Accesorios", tag: "ACCESORIO", color: DATA, tagBg: "rgba(56,224,123,.12)", wrapBorder: "rgba(56,224,123,.25)", supWrap: "box-shadow:inset 2px 0 0 " + DATA,
+    exercises: [
+      { name: "Zancadas con mancuerna", scheme: "3 × 12", rpe: "8", rm: "—", rest: "90s", sup: "A1" },
+      { name: "Curl femoral tumbado", scheme: "3 × 12", rpe: "8", rm: "—", rest: "90s", sup: "A2", machineId: "leg-curl" },
+      { name: "Plancha", scheme: "3 × 45s", rpe: "7", rm: "—", rest: "60s", sup: "" },
+    ],
+  },
+];
+
+// Coach view: which prescribed exercises target this machine, with their scheme.
+const coachHistoryFor = (machineId: string) =>
+  routineBlocks.flatMap((b) =>
+    b.exercises
+      .filter((e) => e.machineId === machineId)
+      .map((e) => ({ when: e.name, val: e.scheme + (e.rm !== "—" ? " · " + e.rm + " RM" : "") })),
+  );
+
 function Builder({ onToast }: { onToast: (m: string) => void }) {
-  const blocks = [
-    {
-      name: "Calentamiento", tag: "WARM-UP", color: "#5AA9FF", tagBg: "rgba(90,169,255,.12)", wrapBorder: "rgba(255,255,255,.05)", supWrap: "",
-      exercises: [
-        { name: "Movilidad de cadera", scheme: "2 × 10", rpe: "—", rm: "—", rest: "45s", sup: "" },
-        { name: "Face pull", scheme: "3 × 15", rpe: "6", rm: "—", rest: "45s", sup: "" },
-      ],
-    },
-    {
-      name: "Fuerza principal", tag: "FUERZA", color: ACTION, tagBg: "rgba(255,122,26,.12)", wrapBorder: "rgba(255,255,255,.05)", supWrap: "",
-      exercises: [
-        { name: "Sentadilla trasera", scheme: "5 × 5", rpe: "8", rm: "82.5%", rest: "180s", sup: "" },
-        { name: "Press de banca", scheme: "5 × 5", rpe: "8", rm: "80%", rest: "180s", sup: "" },
-      ],
-    },
-    {
-      name: "Accesorios", tag: "ACCESORIO", color: DATA, tagBg: "rgba(56,224,123,.12)", wrapBorder: "rgba(56,224,123,.25)", supWrap: "box-shadow:inset 2px 0 0 " + DATA,
-      exercises: [
-        { name: "Zancadas con mancuerna", scheme: "3 × 12", rpe: "8", rm: "—", rest: "90s", sup: "A1" },
-        { name: "Curl femoral tumbado", scheme: "3 × 12", rpe: "8", rm: "—", rest: "90s", sup: "A2" },
-        { name: "Plancha", scheme: "3 × 45s", rpe: "7", rm: "—", rest: "60s", sup: "" },
-      ],
-    },
-  ];
+  const blocks = routineBlocks;
 
   return (
     <div style={css("padding:8px 18px 110px;animation:ccUp .45s cubic-bezier(.2,.8,.2,1)")}>

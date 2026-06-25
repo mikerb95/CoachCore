@@ -38,6 +38,10 @@ export default function LoginForm({ justRegistered }: { justRegistered: boolean 
           {pending ? "Entrando…" : "Entrar"}
           {!pending && <i className="ph-bold ph-arrow-right" />}
         </button>
+
+        <Link href="/recuperar" style={css("text-align:center;font:500 12.5px 'IBM Plex Sans';color:#8A938F;margin-top:2px")}>
+          ¿Olvidaste tu contraseña?
+        </Link>
       </form>
 
       <div style={css("flex:1")} />
