@@ -48,3 +48,67 @@ export const fmt = (s: number) => {
   const r = s % 60;
   return m + ":" + String(r).padStart(2, "0");
 };
+
+/* ── Mapper de cliente real (BD) → forma de presentación del roster ── */
+
+export type RawClient = {
+  id: string;
+  name: string;
+  goal: string;
+  level: string;
+  age: number | null;
+  status: string;
+  injuries: string;
+};
+
+const GOAL_STYLE: Record<string, { icon: string; col: string; bg: string }> = {
+  Hipertrofia: { icon: "ph ph-arrows-out-line-vertical", col: "#38E07B", bg: "rgba(56,224,123,.12)" },
+  "Pérdida de grasa": { icon: "ph ph-fire", col: "#FF7A1A", bg: "rgba(255,122,26,.12)" },
+  Fuerza: { icon: "ph ph-barbell", col: "#5AA9FF", bg: "rgba(90,169,255,.12)" },
+  Rehabilitación: { icon: "ph ph-bandaids", col: "#FF6B8A", bg: "rgba(255,107,138,.12)" },
+};
+
+const BG_POOL = [
+  "linear-gradient(135deg,#1f3d2a,#16291d)",
+  "linear-gradient(135deg,#3d2a1f,#291d16)",
+  "linear-gradient(135deg,#23303d,#19232d)",
+  "linear-gradient(135deg,#2e2440,#211a30)",
+  "linear-gradient(135deg,#3d2330,#2c1a23)",
+  "linear-gradient(135deg,#1f3a3d,#16292c)",
+];
+
+export function initialsOf(name: string): string {
+  return name
+    .split(/\s+/)
+    .filter(Boolean)
+    .slice(0, 2)
+    .map((w) => w[0]!.toUpperCase())
+    .join("");
+}
+
+export function presentClient(c: RawClient, idx: number) {
+  const g = GOAL_STYLE[c.goal] ?? GOAL_STYLE.Hipertrofia;
+  const active = c.status === "Activo";
+  return {
+    id: idx, // índice numérico estable para el estado de UI
+    name: c.name,
+    initials: initialsOf(c.name),
+    goal: c.goal,
+    goalIcon: g.icon,
+    goalCol: g.col,
+    goalBg: g.bg,
+    level: c.level,
+    age: c.age ? `${c.age} años` : "—",
+    status: c.status,
+    statusCol: active ? DATA : MUTED,
+    injuries: c.injuries || "Sin lesiones registradas.",
+    bg: BG_POOL[idx % BG_POOL.length],
+    realId: c.id,
+    // Estadísticas aún no calculadas a partir de datos reales.
+    s1: "—",
+    s2: "—",
+    s3: "—",
+  };
+}
+
+export type PresentedClient = ReturnType<typeof presentClient>;
