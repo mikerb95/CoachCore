@@ -330,9 +330,9 @@ function Stepper({ icon, label, value, onDec, onInc, border }: { icon: string; l
         <i className={icon} style={css("color:#6E7A76;font-size:17px")} />{label}
       </span>
       <div style={css("display:flex;align-items:center;gap:12px")}>
-        <button onClick={onDec} style={css("width:30px;height:30px;border-radius:9px;border:1px solid rgba(255,255,255,.1);background:#0A0F11;color:#C6CFCB;font-size:15px;cursor:pointer")}><i className="ph-bold ph-minus" /></button>
+        <button onClick={onDec} aria-label={`Disminuir ${label}`} style={css("width:30px;height:30px;border-radius:9px;border:1px solid rgba(255,255,255,.1);background:#0A0F11;color:#C6CFCB;font-size:15px;cursor:pointer")}><i className="ph-bold ph-minus" aria-hidden="true" /></button>
         <span style={css("font:700 16px 'Space Grotesk';color:#fff;min-width:64px;text-align:center")}>{value}</span>
-        <button onClick={onInc} style={css("width:30px;height:30px;border-radius:9px;border:1px solid rgba(255,255,255,.1);background:#0A0F11;color:#C6CFCB;font-size:15px;cursor:pointer")}><i className="ph-bold ph-plus" /></button>
+        <button onClick={onInc} aria-label={`Aumentar ${label}`} style={css("width:30px;height:30px;border-radius:9px;border:1px solid rgba(255,255,255,.1);background:#0A0F11;color:#C6CFCB;font-size:15px;cursor:pointer")}><i className="ph-bold ph-plus" aria-hidden="true" /></button>
       </div>
     </div>
   );
@@ -683,9 +683,9 @@ function BottomNav({ screen, go }: { screen: Screen; go: (s: Screen) => void }) 
         <i className="ph-fill ph-squares-four" style={{ fontSize: 22, color: col("machines") }} />
         <span style={{ ...css("font:600 9.5px 'IBM Plex Sans'"), color: col("machines") }}>Máquinas</span>
       </button>
-      <button onClick={() => go("log")} style={css("background:none;border:none;display:flex;flex-direction:column;align-items:center;gap:5px;cursor:pointer;flex:1")}>
+      <button onClick={() => go("log")} aria-label="Entrenar" style={css("background:none;border:none;display:flex;flex-direction:column;align-items:center;gap:5px;cursor:pointer;flex:1")}>
         <span style={css("width:44px;height:34px;border-radius:12px;background:var(--data);display:flex;align-items:center;justify-content:center;box-shadow:0 6px 18px rgba(56,224,123,.32)")}>
-          <i className="ph-bold ph-barbell" style={css("font-size:19px;color:#06140C")} />
+          <i className="ph-bold ph-barbell" style={css("font-size:19px;color:#06140C")} aria-hidden="true" />
         </span>
       </button>
       <button onClick={() => go("progress")} style={css("background:none;border:none;display:flex;flex-direction:column;align-items:center;gap:4px;cursor:pointer;flex:1")}>

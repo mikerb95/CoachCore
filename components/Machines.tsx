@@ -153,7 +153,7 @@ function MachineSheet({
 
   return (
     <>
-      <div onClick={onClose} style={css("position:absolute;inset:0;background:rgba(0,0,0,.55);z-index:50")} />
+      <div onClick={onClose} aria-hidden="true" style={css("position:absolute;inset:0;background:rgba(0,0,0,.55);z-index:50")} />
       <div className="cc-scroll" style={css("position:absolute;left:0;right:0;bottom:0;z-index:51;background:#0E1416;border-radius:28px 28px 0 0;border-top:1px solid rgba(255,255,255,.08);padding:14px 18px 26px;max-height:88%;overflow-y:auto;animation:ccSlide .4s cubic-bezier(.2,.8,.2,1)")}>
         <div style={css("width:38px;height:4px;border-radius:3px;background:#2A3338;margin:0 auto 18px")} />
 
