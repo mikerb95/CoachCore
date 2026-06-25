@@ -34,6 +34,11 @@ export default function CoachApp({ user, initialClients }: { user: { name: strin
 
   const go = (s: Screen) => { setScreen(s); setProfileId(null); };
   const startSession = (id: number) => { setLiveId(id); setProfileId(null); setScreen("live"); };
+  const seedRoster = () => startTransition(async () => { await seedDemoClients(); router.refresh(); });
+  const removeClient = (realId: string) =>
+    startTransition(async () => { await deleteClient(realId); setProfileId(null); router.refresh(); });
+  const addClient = (fd: FormData) =>
+    startTransition(async () => { await createClient({}, fd); router.refresh(); });
   const showToast = (msg: string) => {
     setToast(msg);
     if (toastTimer.current) clearTimeout(toastTimer.current);
@@ -77,13 +82,17 @@ export default function CoachApp({ user, initialClients }: { user: { name: strin
         {screen === "machines" && <MachineInventory onBack={() => go("dashboard")} historyFor={coachHistoryFor} />}
         {screen === "roster" && (
           <Roster
+            clients={roster}
             query={query}
             onSearch={setQuery}
             onOpen={setProfileId}
             profileId={profileId}
             onClose={() => setProfileId(null)}
             onStats={() => { setProfileId(null); setScreen("analytics"); }}
-            onStartSession={startSession}
+            onStartSession={() => startSession(1)}
+            onSeed={seedRoster}
+            onAdd={addClient}
+            onDelete={removeClient}
           />
         )}
         {screen === "builder" && <Builder onToast={showToast} />}
@@ -238,8 +247,9 @@ function Dashboard({ onStart, onMachines }: { onStart: (id: number) => void; onM
 
 /* ============================ ROSTER ============================ */
 function Roster({
-  query, onSearch, onOpen, profileId, onClose, onStats, onStartSession,
+  clients: roster, query, onSearch, onOpen, profileId, onClose, onStats, onStartSession, onSeed, onAdd, onDelete,
 }: {
+  clients: PresentedClient[];
   query: string;
   onSearch: (v: string) => void;
   onOpen: (id: number) => void;
@@ -247,21 +257,60 @@ function Roster({
   onClose: () => void;
   onStats: () => void;
   onStartSession: (id: number) => void;
+  onSeed: () => void;
+  onAdd: (fd: FormData) => void;
+  onDelete: (realId: string) => void;
 }) {
+  const [adding, setAdding] = useState(false);
   const q = query.trim().toLowerCase();
-  const list = clients.filter((c) => !q || c.name.toLowerCase().includes(q) || c.goal.toLowerCase().includes(q));
-  const p = byId(profileId);
+  const list = roster.filter((c) => !q || c.name.toLowerCase().includes(q) || c.goal.toLowerCase().includes(q));
+  const p = roster.find((c) => c.id === profileId);
 
   return (
     <>
       <div style={css("padding:8px 18px 110px;animation:ccUp .45s cubic-bezier(.2,.8,.2,1)")}>
-        <div style={css("font:700 30px 'Space Grotesk';color:#fff;letter-spacing:-.6px;margin-bottom:4px")}>Clientes</div>
-        <div style={css("font:500 13px 'IBM Plex Sans';color:#6E7A76;margin-bottom:16px")}>{clients.length} en tu cartera</div>
+        <div style={css("display:flex;align-items:center;justify-content:space-between;margin-bottom:4px")}>
+          <div style={css("font:700 30px 'Space Grotesk';color:#fff;letter-spacing:-.6px")}>Clientes</div>
+          <button onClick={() => setAdding((v) => !v)} style={css("width:40px;height:40px;border-radius:12px;border:none;background:var(--action);color:#1a0c00;font-size:20px;cursor:pointer;display:flex;align-items:center;justify-content:center")}>
+            <i className={adding ? "ph-bold ph-x" : "ph-bold ph-plus"} />
+          </button>
+        </div>
+        <div style={css("font:500 13px 'IBM Plex Sans';color:#6E7A76;margin-bottom:16px")}>{roster.length} en tu cartera · BD</div>
+
+        {adding && (
+          <form
+            action={(fd) => { onAdd(fd); setAdding(false); }}
+            style={css("background:#12181A;border:1px solid rgba(255,255,255,.07);border-radius:16px;padding:14px;margin-bottom:16px;display:flex;flex-direction:column;gap:10px")}
+          >
+            <input name="name" required placeholder="Nombre del cliente" style={css("background:#0A0F11;border:1px solid rgba(255,255,255,.08);border-radius:11px;padding:0 12px;height:44px;color:#fff;outline:none;font:500 14px 'IBM Plex Sans'")} />
+            <div style={css("display:flex;gap:10px")}>
+              <select name="goal" defaultValue="Hipertrofia" style={css("flex:1;background:#0A0F11;border:1px solid rgba(255,255,255,.08);border-radius:11px;height:44px;color:#fff;outline:none;font:500 13px 'IBM Plex Sans';padding:0 10px")}>
+                <option>Hipertrofia</option><option>Pérdida de grasa</option><option>Fuerza</option><option>Rehabilitación</option>
+              </select>
+              <input name="age" type="number" min={0} max={120} placeholder="Edad" style={css("width:80px;background:#0A0F11;border:1px solid rgba(255,255,255,.08);border-radius:11px;height:44px;color:#fff;outline:none;font:500 14px 'IBM Plex Sans';padding:0 12px")} />
+            </div>
+            <input name="level" defaultValue="Principiante" placeholder="Nivel" style={css("background:#0A0F11;border:1px solid rgba(255,255,255,.08);border-radius:11px;padding:0 12px;height:44px;color:#fff;outline:none;font:500 14px 'IBM Plex Sans'")} />
+            <button type="submit" style={css("height:46px;border:none;border-radius:12px;background:var(--data);color:#06140C;font:700 14px 'IBM Plex Sans';cursor:pointer")}>Guardar cliente</button>
+          </form>
+        )}
+
         <div style={css("display:flex;align-items:center;gap:9px;background:#12181A;border:1px solid rgba(255,255,255,.06);border-radius:14px;padding:0 13px;height:46px;margin-bottom:18px")}>
           <i className="ph ph-magnifying-glass" style={css("color:#6E7A76;font-size:18px")} />
           <input value={query} onChange={(e) => onSearch(e.target.value)} placeholder="Buscar cliente…" style={css("flex:1;background:none;border:none;outline:none;color:#fff;font:500 14px 'IBM Plex Sans'")} />
           <i className="ph ph-sliders-horizontal" style={css("color:#6E7A76;font-size:18px")} />
         </div>
+
+        {roster.length === 0 && !adding && (
+          <div style={css("text-align:center;padding:30px 24px")}>
+            <div style={css("width:84px;height:84px;border-radius:26px;background:#12181A;border:1px solid rgba(255,255,255,.06);display:flex;align-items:center;justify-content:center;margin:0 auto 18px")}>
+              <i className="ph ph-users-three" style={css("font-size:38px;color:#38E07B")} />
+            </div>
+            <div style={css("font:700 18px 'Space Grotesk';color:#fff")}>Aún no tienes clientes</div>
+            <div style={css("font:500 13px 'IBM Plex Sans';color:#8A938F;margin-top:8px;line-height:1.5")}>Añade tu primer cliente o carga el roster de ejemplo para probar.</div>
+            <button onClick={onSeed} style={css("margin-top:18px;height:46px;padding:0 18px;border:1px solid rgba(255,255,255,.1);border-radius:13px;background:#12181A;color:#C6CFCB;font:600 13px 'IBM Plex Sans';cursor:pointer")}>Cargar roster de ejemplo</button>
+          </div>
+        )}
+
         {list.map((c) => (
           <div key={c.id} onClick={() => onOpen(c.id)} style={css("background:#12181A;border:1px solid rgba(255,255,255,.05);border-radius:16px;padding:13px;display:flex;align-items:center;gap:12px;margin-bottom:9px;cursor:pointer")}>
             <div style={{ ...css("width:46px;height:46px;border-radius:14px;flex:none;display:flex;align-items:center;justify-content:center;font:700 14px 'Space Grotesk';color:#E6ECEA"), background: c.bg }}>{c.initials}</div>
