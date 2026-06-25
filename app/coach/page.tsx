@@ -1,11 +1,27 @@
 import { redirect } from "next/navigation";
 import { auth } from "@/auth";
 import CoachApp from "./CoachApp";
+import { listClients } from "@/app/actions/data";
 
 export default async function CoachPage() {
   const session = await auth();
   if (!session?.user) redirect("/login");
   if (session.user.role !== "entrenador") redirect("/cliente");
 
-  return <CoachApp user={{ name: session.user.name ?? "Entrenador", email: session.user.email ?? "" }} />;
+  const roster = await listClients();
+
+  return (
+    <CoachApp
+      user={{ name: session.user.name ?? "Entrenador", email: session.user.email ?? "" }}
+      initialClients={roster.map((c) => ({
+        id: c.id,
+        name: c.name,
+        goal: c.goal,
+        level: c.level,
+        age: c.age,
+        status: c.status,
+        injuries: c.injuries,
+      }))}
+    />
+  );
 }
