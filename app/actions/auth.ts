@@ -5,10 +5,12 @@ import { eq } from "drizzle-orm";
 import { redirect } from "next/navigation";
 import { db } from "@/db";
 import { users } from "@/db/schema";
+import { headers } from "next/headers";
 import { registerSchema, loginSchema } from "@/lib/validation";
 import { PRIVACY_VERSION } from "@/lib/constants";
 import { auth, signIn, signOut } from "@/auth";
 import { AuthError } from "next-auth";
+import { rateLimit } from "@/lib/rateLimit";
 
 export type RegisterState = { error?: string; fieldErrors?: Record<string, string> };
 export type LoginState = { error?: string };
