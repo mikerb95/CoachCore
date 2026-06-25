@@ -545,8 +545,8 @@ function Live({
   return (
     <div style={css("min-height:100%;background:#070B0C;animation:ccPop .3s ease;display:flex;flex-direction:column")}>
       <div style={css("padding:6px 18px 0;display:flex;align-items:center;justify-content:space-between")}>
-        <button onClick={back} style={css("width:40px;height:40px;border-radius:12px;border:1px solid rgba(255,255,255,.08);background:#10161800;color:#C6CFCB;font-size:18px;cursor:pointer")}>
-          <i className="ph-bold ph-x" />
+        <button onClick={back} aria-label="Terminar sesión en vivo" style={css("width:40px;height:40px;border-radius:12px;border:1px solid rgba(255,255,255,.08);background:#10161800;color:#C6CFCB;font-size:18px;cursor:pointer")}>
+          <i className="ph-bold ph-x" aria-hidden="true" />
         </button>
         <div style={css("text-align:center")}>
           <div style={css("font:600 13px 'IBM Plex Sans';color:#fff")}>{client.name}</div>
@@ -610,8 +610,8 @@ function Live({
         <button onClick={toggleRest} style={{ ...css("flex:1;height:56px;border:none;border-radius:16px;font:700 16px 'Space Grotesk';display:flex;align-items:center;justify-content:center;gap:9px;cursor:pointer;transition:all .2s"), background: restActive ? ACTION : "#171E21", color: restActive ? "#1a0c00" : "#E6ECEA" }}>
           <i className={restActive ? "ph-fill ph-pause" : "ph-fill ph-timer"} style={css("font-size:20px")} />{restLabel}
         </button>
-        <button onClick={nextSet} style={css("flex:none;width:56px;height:56px;border-radius:16px;border:none;background:var(--data);color:#06140C;font-size:22px;cursor:pointer;display:flex;align-items:center;justify-content:center")}>
-          <i className="ph-bold ph-check" />
+        <button onClick={nextSet} aria-label="Completar serie e iniciar descanso" style={css("flex:none;width:56px;height:56px;border-radius:16px;border:none;background:var(--data);color:#06140C;font-size:22px;cursor:pointer;display:flex;align-items:center;justify-content:center")}>
+          <i className="ph-bold ph-check" aria-hidden="true" />
         </button>
       </div>
     </div>
@@ -794,9 +794,9 @@ function BottomNav({ screen, go }: { screen: Screen; go: (s: Screen) => void }) 
         <i className="ph-fill ph-users-three" style={{ fontSize: 22, color: col("roster") }} />
         <span style={{ ...css("font:600 9.5px 'IBM Plex Sans'"), color: col("roster") }}>Clientes</span>
       </button>
-      <button onClick={() => go("builder")} style={css("background:none;border:none;display:flex;flex-direction:column;align-items:center;gap:5px;cursor:pointer;flex:1")}>
+      <button onClick={() => go("builder")} aria-label="Crear rutina" style={css("background:none;border:none;display:flex;flex-direction:column;align-items:center;gap:5px;cursor:pointer;flex:1")}>
         <span style={css("width:44px;height:34px;border-radius:12px;background:var(--action);display:flex;align-items:center;justify-content:center;box-shadow:0 6px 18px rgba(255,122,26,.35)")}>
-          <i className="ph-bold ph-plus" style={css("font-size:20px;color:#1a0c00")} />
+          <i className="ph-bold ph-plus" style={css("font-size:20px;color:#1a0c00")} aria-hidden="true" />
         </span>
       </button>
       <button onClick={() => go("analytics")} style={css("background:none;border:none;display:flex;flex-direction:column;align-items:center;gap:4px;cursor:pointer;flex:1")}>
