@@ -25,8 +25,8 @@ export default function LoginForm({ justRegistered }: { justRegistered: boolean 
       )}
 
       <form action={action} style={css("display:flex;flex-direction:column;gap:12px;margin-top:24px")}>
-        <Field icon="ph ph-envelope-simple" name="email" type="email" placeholder="tu@email.com" autoComplete="email" />
-        <Field icon="ph ph-lock-simple" name="password" type="password" placeholder="Contraseña" autoComplete="current-password" />
+        <Field icon="ph ph-envelope-simple" name="email" type="email" placeholder="tu@email.com" autoComplete="email" label="Correo electrónico" />
+        <Field icon="ph ph-lock-simple" name="password" type="password" placeholder="Contraseña" autoComplete="current-password" label="Contraseña" />
 
         {state.error && (
           <div style={css("font:500 12.5px 'IBM Plex Sans';color:#FF6B8A;display:flex;align-items:center;gap:6px")}>

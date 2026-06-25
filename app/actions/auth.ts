@@ -24,7 +24,7 @@ export async function loginAction(_prev: LoginState, formData: FormData): Promis
 
   // Límite de intentos por IP + email para frenar fuerza bruta.
   const ip = (await headers()).get("x-forwarded-for")?.split(",")[0]?.trim() ?? "unknown";
-  const rl = rateLimit(`login:${ip}:${parsed.data.email}`, 5, 5 * 60_000);
+  const rl = await rateLimit(`login:${ip}:${parsed.data.email}`, 5, 5 * 60_000);
   if (!rl.success) {
     return { error: `Demasiados intentos. Inténtalo de nuevo en ${rl.retryAfter}s.` };
   }

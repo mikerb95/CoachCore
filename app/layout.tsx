@@ -30,7 +30,7 @@ export const viewport: Viewport = {
   themeColor: "#0A0E0F",
   width: "device-width",
   initialScale: 1,
-  maximumScale: 1,
+  // Sin maximumScale/userScalable: permitir el zoom es requisito de accesibilidad (WCAG 1.4.4).
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

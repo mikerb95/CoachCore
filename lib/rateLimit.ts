@@ -1,22 +1,27 @@
 /**
- * Rate limiting con ventana deslizante en memoria (por instancia).
+ * Rate limiting con ventana fija.
  *
- * Suficiente para Hobby / instancia única. En producción multi-instancia,
- * define UPSTASH_REDIS_REST_URL + UPSTASH_REDIS_REST_TOKEN e instala
- * `@upstash/ratelimit @upstash/redis` para un límite distribuido.
+ * - Si están definidas UPSTASH_REDIS_REST_URL + UPSTASH_REDIS_REST_TOKEN, usa
+ *   Redis (Upstash) vía REST → límite **distribuido**, válido en multi-instancia
+ *   / serverless (Vercel). No requiere SDK: solo `fetch`.
+ * - Si no, cae a un contador en memoria por instancia (suficiente para dev o
+ *   despliegue de instancia única).
+ *
+ * La función es async para soportar el backend remoto de forma transparente.
  */
+
+export type RateResult = { success: boolean; remaining: number; retryAfter: number };
+
+const UPSTASH_URL = process.env.UPSTASH_REDIS_REST_URL;
+const UPSTASH_TOKEN = process.env.UPSTASH_REDIS_REST_TOKEN;
+const useRedis = !!(UPSTASH_URL && UPSTASH_TOKEN);
+
+/* ───────────────────────── Backend en memoria ───────────────────────── */
 
 type Bucket = number[]; // timestamps (ms) de los hits dentro de la ventana
 const store = new Map<string, Bucket>();
 
-export type RateResult = { success: boolean; remaining: number; retryAfter: number };
-
-/**
- * @param key      identificador (p.ej. "login:email@x.com:1.2.3.4")
- * @param limit    nº máximo de intentos en la ventana
- * @param windowMs tamaño de la ventana en ms
- */
-export function rateLimit(key: string, limit = 5, windowMs = 60_000): RateResult {
+function memoryLimit(key: string, limit: number, windowMs: number): RateResult {
   const now = Date.now();
   const cutoff = now - windowMs;
   const hits = (store.get(key) ?? []).filter((t) => t > cutoff);
@@ -40,4 +45,56 @@ export function rateLimit(key: string, limit = 5, windowMs = 60_000): RateResult
   }
 
   return { success: true, remaining: limit - hits.length, retryAfter: 0 };
+}
+
+/* ───────────────────────── Backend Redis (Upstash) ───────────────────────── */
+
+async function redisLimit(key: string, limit: number, windowMs: number): Promise<RateResult> {
+  const now = Date.now();
+  const windowStart = Math.floor(now / windowMs);
+  const windowKey = `rl:${key}:${windowStart}`;
+  const resetAt = (windowStart + 1) * windowMs;
+
+  // Pipeline atómico: INCR + fijar caducidad solo la primera vez (NX).
+  const res = await fetch(`${UPSTASH_URL}/pipeline`, {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${UPSTASH_TOKEN}`,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify([
+      ["INCR", windowKey],
+      ["PEXPIRE", windowKey, windowMs, "NX"],
+    ]),
+    cache: "no-store",
+  });
+
+  if (!res.ok) throw new Error(`Upstash ${res.status}`);
+  const data = (await res.json()) as { result: unknown }[];
+  const count = Number(data[0]?.result ?? 0);
+
+  if (count > limit) {
+    return { success: false, remaining: 0, retryAfter: Math.ceil((resetAt - now) / 1000) };
+  }
+  return { success: true, remaining: Math.max(0, limit - count), retryAfter: 0 };
+}
+
+/* ───────────────────────── API pública ───────────────────────── */
+
+/**
+ * @param key      identificador (p.ej. "login:1.2.3.4")
+ * @param limit    nº máximo de intentos en la ventana
+ * @param windowMs tamaño de la ventana en ms
+ */
+export async function rateLimit(key: string, limit = 5, windowMs = 60_000): Promise<RateResult> {
+  if (useRedis) {
+    try {
+      return await redisLimit(key, limit, windowMs);
+    } catch (err) {
+      // Fail-open: si Redis falla, no tumbamos el login; degradamos a memoria.
+      console.error("[rateLimit] Upstash no disponible, fallback en memoria:", err);
+      return memoryLimit(key, limit, windowMs);
+    }
+  }
+  return memoryLimit(key, limit, windowMs);
 }

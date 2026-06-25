@@ -38,7 +38,7 @@ export async function requestPasswordReset(
   const email = parsed.data;
 
   const ip = await clientIp();
-  const rl = rateLimit(`reset:${ip}`, 3, 15 * 60_000);
+  const rl = await rateLimit(`reset:${ip}`, 3, 15 * 60_000);
   if (!rl.success) return { error: `Demasiados intentos. Prueba en ${rl.retryAfter}s.` };
 
   const found = await db.select().from(users).where(eq(users.email, email)).limit(1);
