@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import Link from "next/link";
 import { css } from "@/lib/css";
 import { PhoneFrame, StatusBar, Toast } from "@/components/Frame";
 import { AccountActions } from "@/components/AccountActions";
@@ -94,7 +93,7 @@ export default function CoachApp({ user }: { user: { name: string; email: string
           />
         )}
         {screen === "analytics" && <Analytics />}
-        {screen === "settings" && <Settings onToast={showToast} />}
+        {screen === "settings" && <Settings onToast={showToast} user={user} />}
       </div>
 
       {screen !== "live" && <BottomNav screen={screen} go={go} />}
@@ -592,7 +591,7 @@ function Analytics() {
 }
 
 /* ============================ SETTINGS ============================ */
-function Settings({ onToast }: { onToast: (m: string) => void }) {
+function Settings({ onToast, user }: { onToast: (m: string) => void; user: { name: string; email: string } }) {
   return (
     <div style={css("padding:8px 18px 110px;animation:ccUp .45s cubic-bezier(.2,.8,.2,1)")}>
       <div style={css("font:700 28px 'Space Grotesk';color:#fff;letter-spacing:-.5px;margin-bottom:16px")}>Ajustes</div>
@@ -654,11 +653,11 @@ function Settings({ onToast }: { onToast: (m: string) => void }) {
         </div>
       </div>
 
-      <div style={css("text-align:center;font:500 11px 'JetBrains Mono';color:#465049;line-height:1.7")}>
-        CoachCore v1.0<br />Sin suscripciones · 100% offline · PWA
-      </div>
+      <AccountActions name={user.name} email={user.email} />
 
-      <Link href="/" style={css("display:block;text-align:center;font:600 12px 'IBM Plex Sans';color:#5E6A66;margin-top:14px")}>Cambiar de rol</Link>
+      <div style={css("text-align:center;font:500 11px 'JetBrains Mono';color:#465049;line-height:1.7;margin-top:22px")}>
+        CoachCore v1.0<br />Cifrado · RGPD · Datos en tu Postgres
+      </div>
     </div>
   );
 }
