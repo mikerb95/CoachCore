@@ -5,6 +5,9 @@
 next-env.d.ts
 .DS_Store
 *.pem
-.env*.local
+# Ignora cualquier archivo de entorno con secretos, pero conserva la plantilla.
+.env
+.env.*
+!.env.example
 .vercel
 *.tsbuildinfo

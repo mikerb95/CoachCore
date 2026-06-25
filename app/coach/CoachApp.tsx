@@ -385,6 +385,9 @@ function Roster({
               <button onClick={() => onStartSession(p.id)} style={css("flex:none;width:50px;height:50px;border:1px solid rgba(255,255,255,.1);border-radius:14px;background:#171E21;color:var(--action);font-size:20px;cursor:pointer")}>
                 <i className="ph-fill ph-play" />
               </button>
+              <button onClick={() => onDelete(p.realId)} style={css("flex:none;width:50px;height:50px;border:1px solid rgba(255,107,138,.25);border-radius:14px;background:rgba(255,107,138,.06);color:#FF6B8A;font-size:19px;cursor:pointer")}>
+                <i className="ph ph-trash" />
+              </button>
             </div>
           </div>
         </>
