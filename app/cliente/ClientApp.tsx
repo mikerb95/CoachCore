@@ -133,8 +133,9 @@ export default function ClientApp({ user }: { user: { name: string; email: strin
 
 /* ============================ HOME / CHECK-IN ============================ */
 function Home({
-  weight, sleep, energy, soreness, saved, onStart, wInc, wDec, sInc, sDec, setEnergy, setSoreness, save,
+  user, weight, sleep, energy, soreness, saved, onStart, wInc, wDec, sInc, sDec, setEnergy, setSoreness, save,
 }: {
+  user: { name: string; email: string };
   weight: number; sleep: number; energy: number; soreness: number; saved: boolean;
   onStart: () => void;
   wInc: () => void; wDec: () => void; sInc: () => void; sDec: () => void;
