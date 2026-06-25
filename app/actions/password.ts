@@ -65,7 +65,7 @@ export async function requestPasswordReset(
   return { ok: true };
 }
 
-export type ResetState = { error?: string; fieldErrors?: Record<string, string> };
+export type ResetState = { ok?: boolean; error?: string; fieldErrors?: Record<string, string> };
 
 /** Paso 2: fijar la nueva contraseña con un token válido. */
 export async function resetPassword(_prev: ResetState, formData: FormData): Promise<ResetState> {
