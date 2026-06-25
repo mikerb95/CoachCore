@@ -102,7 +102,9 @@ export default function ClientApp({ user }: { user: { name: string; email: strin
     const t = now.getHours() + ":" + String(now.getMinutes()).padStart(2, "0");
     setMessages((m) => [...(m || seed()), { from: "me", text: d, time: t }]);
     setDraft("");
-    void sendMyMessage(d).catch(() => {});
+    void sendMyMessage(d).catch(() => {
+      showToast("No se pudo enviar el mensaje. Inténtalo de nuevo.");
+    });
   };
 
   // Real per-machine history: the exercises in this client's routine that use
