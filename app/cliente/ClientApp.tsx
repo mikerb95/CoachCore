@@ -52,6 +52,7 @@ export default function ClientApp({ user }: { user: { name: string; email: strin
   const [toast, setToast] = useState("");
   const timer = useRef<ReturnType<typeof setInterval> | null>(null);
   const toastTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const savingCheckin = useRef(false);
 
   useEffect(() => () => {
     if (timer.current) clearInterval(timer.current);
