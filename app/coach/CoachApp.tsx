@@ -572,7 +572,7 @@ function Live({
           {setData.map((s) => {
             const done = !!doneSets[s.n];
             return (
-              <div key={s.n} onClick={() => toggleSet(s.n)} style={{ ...css("display:grid;grid-template-columns:34px 1fr 1fr 44px;gap:8px;align-items:center;border-radius:14px;padding:11px 10px;cursor:pointer"), background: done ? "rgba(56,224,123,.07)" : "#10171A", border: `1px solid ${done ? "rgba(56,224,123,.3)" : "rgba(255,255,255,.06)"}` }}>
+              <div key={s.n} onClick={() => toggleSet(s.n)} role="button" tabIndex={0} aria-pressed={done} aria-label={`Serie ${s.n}: ${done ? "completada" : "marcar completada"}`} onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); toggleSet(s.n); } }} style={{ ...css("display:grid;grid-template-columns:34px 1fr 1fr 44px;gap:8px;align-items:center;border-radius:14px;padding:11px 10px;cursor:pointer"), background: done ? "rgba(56,224,123,.07)" : "#10171A", border: `1px solid ${done ? "rgba(56,224,123,.3)" : "rgba(255,255,255,.06)"}` }}>
                 <span style={css("font:700 15px 'Space Grotesk';color:#fff;text-align:center")}>{s.n}</span>
                 <span style={css("font:500 12px 'JetBrains Mono';color:#6E7A76;line-height:1.3")}>{s.prevW + U + " × " + s.prevR + " · RPE" + s.rpe}</span>
                 <span style={css("text-align:center")}>
