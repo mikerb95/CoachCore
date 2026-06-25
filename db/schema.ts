@@ -26,3 +26,100 @@ export const users = pgTable("users", {
 
 export type User = typeof users.$inferSelect;
 export type NewUser = typeof users.$inferInsert;
+
+export const goalEnum = pgEnum("goal", [
+  "Hipertrofia",
+  "Pérdida de grasa",
+  "Fuerza",
+  "Rehabilitación",
+]);
+
+export const clientStatusEnum = pgEnum("client_status", ["Activo", "Descanso"]);
+
+/** Roster del entrenador. Cada cliente pertenece a un entrenador (trainerId). */
+export const clients = pgTable(
+  "clients",
+  {
+    id: uuid("id").defaultRandom().primaryKey(),
+    trainerId: uuid("trainer_id")
+      .notNull()
+      .references(() => users.id, { onDelete: "cascade" }),
+    name: text("name").notNull(),
+    goal: goalEnum("goal").notNull().default("Hipertrofia"),
+    level: text("level").notNull().default("Principiante"),
+    age: integer("age"),
+    status: clientStatusEnum("status").notNull().default("Activo"),
+    injuries: text("injuries").notNull().default(""),
+    createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+  },
+  (t) => [index("clients_trainer_idx").on(t.trainerId)],
+);
+
+/** Check-ins diarios que envía el cliente (datos de salud). */
+export const checkins = pgTable(
+  "checkins",
+  {
+    id: uuid("id").defaultRandom().primaryKey(),
+    userId: uuid("user_id")
+      .notNull()
+      .references(() => users.id, { onDelete: "cascade" }),
+    weightKg: real("weight_kg"),
+    sleepHours: real("sleep_hours"),
+    energy: integer("energy"), // 1–5
+    soreness: integer("soreness"), // 0–3
+    createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+  },
+  (t) => [index("checkins_user_idx").on(t.userId)],
+);
+
+/** Medidas corporales del cliente. */
+export const measurements = pgTable(
+  "measurements",
+  {
+    id: uuid("id").defaultRandom().primaryKey(),
+    userId: uuid("user_id")
+      .notNull()
+      .references(() => users.id, { onDelete: "cascade" }),
+    label: text("label").notNull(), // p.ej. "Cintura", "% Grasa"
+    value: real("value").notNull(),
+    unit: text("unit").notNull().default("kg"),
+    takenAt: timestamp("taken_at", { withTimezone: true }).notNull().defaultNow(),
+  },
+  (t) => [index("measurements_user_idx").on(t.userId)],
+);
+
+/** Mensajes cliente ⇄ entrenador. */
+export const messages = pgTable(
+  "messages",
+  {
+    id: uuid("id").defaultRandom().primaryKey(),
+    userId: uuid("user_id")
+      .notNull()
+      .references(() => users.id, { onDelete: "cascade" }),
+    fromCoach: boolean("from_coach").notNull().default(false),
+    text: text("text").notNull(),
+    createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+  },
+  (t) => [index("messages_user_idx").on(t.userId)],
+);
+
+/** Tokens de recuperación de contraseña (se guarda solo el hash). */
+export const passwordResetTokens = pgTable(
+  "password_reset_tokens",
+  {
+    id: uuid("id").defaultRandom().primaryKey(),
+    userId: uuid("user_id")
+      .notNull()
+      .references(() => users.id, { onDelete: "cascade" }),
+    tokenHash: text("token_hash").notNull(),
+    expiresAt: timestamp("expires_at", { withTimezone: true }).notNull(),
+    usedAt: timestamp("used_at", { withTimezone: true }),
+    createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+  },
+  (t) => [index("prt_token_idx").on(t.tokenHash)],
+);
+
+export type Client = typeof clients.$inferSelect;
+export type Checkin = typeof checkins.$inferSelect;
+export type Measurement = typeof measurements.$inferSelect;
+export type Message = typeof messages.$inferSelect;
