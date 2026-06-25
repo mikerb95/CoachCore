@@ -408,17 +408,17 @@ function Log({
               <div style={css("display:grid;grid-template-columns:30px 1fr 1fr 40px;gap:8px;align-items:center")}>
                 <span style={css("font:700 15px 'Space Grotesk';color:#fff;text-align:center")}>{i}</span>
                 <div style={css("display:flex;align-items:center;justify-content:center;gap:7px")}>
-                  <button onClick={() => setSet(s.k, "w", Math.max(0, Math.round((s.w - 2.5) * 10) / 10))} style={miniBtn}><i className="ph-bold ph-minus" /></button>
+                  <button onClick={() => setSet(s.k, "w", Math.max(0, Math.round((s.w - 2.5) * 10) / 10))} aria-label={`Serie ${i}: bajar peso`} style={miniBtn}><i className="ph-bold ph-minus" aria-hidden="true" /></button>
                   <span style={css("font:700 14px 'Space Grotesk';color:#fff;min-width:48px;text-align:center")}>{e.w === 0 ? s.r + "s" : s.w + U}</span>
-                  <button onClick={() => setSet(s.k, "w", Math.round((s.w + 2.5) * 10) / 10)} style={miniBtn}><i className="ph-bold ph-plus" /></button>
+                  <button onClick={() => setSet(s.k, "w", Math.round((s.w + 2.5) * 10) / 10)} aria-label={`Serie ${i}: subir peso`} style={miniBtn}><i className="ph-bold ph-plus" aria-hidden="true" /></button>
                 </div>
                 <div style={css("display:flex;align-items:center;justify-content:center;gap:7px")}>
-                  <button onClick={() => setSet(s.k, "r", Math.max(0, s.r - 1))} style={miniBtn}><i className="ph-bold ph-minus" /></button>
+                  <button onClick={() => setSet(s.k, "r", Math.max(0, s.r - 1))} aria-label={`Serie ${i}: bajar repeticiones`} style={miniBtn}><i className="ph-bold ph-minus" aria-hidden="true" /></button>
                   <span style={css("font:700 14px 'Space Grotesk';color:#fff;min-width:24px;text-align:center")}>{e.w === 0 ? "—" : s.r}</span>
-                  <button onClick={() => setSet(s.k, "r", s.r + 1)} style={miniBtn}><i className="ph-bold ph-plus" /></button>
+                  <button onClick={() => setSet(s.k, "r", s.r + 1)} aria-label={`Serie ${i}: subir repeticiones`} style={miniBtn}><i className="ph-bold ph-plus" aria-hidden="true" /></button>
                 </div>
-                <button onClick={() => setSet(s.k, "done", !s.done)} style={{ ...css("justify-self:center;width:32px;height:32px;border-radius:10px;display:flex;align-items:center;justify-content:center;cursor:pointer"), background: s.done ? DATA : "#0A0F11", border: `1px solid ${s.done ? DATA : "rgba(255,255,255,.1)"}` }}>
-                  <i className={s.done ? "ph-bold ph-check" : "ph ph-circle"} style={{ fontSize: 16, color: s.done ? "#06140C" : "#3A443F" }} />
+                <button onClick={() => setSet(s.k, "done", !s.done)} aria-label={`Serie ${i}: ${s.done ? "marcada como hecha" : "marcar como hecha"}`} aria-pressed={s.done} style={{ ...css("justify-self:center;width:32px;height:32px;border-radius:10px;display:flex;align-items:center;justify-content:center;cursor:pointer"), background: s.done ? DATA : "#0A0F11", border: `1px solid ${s.done ? DATA : "rgba(255,255,255,.1)"}` }}>
+                  <i className={s.done ? "ph-bold ph-check" : "ph ph-circle"} style={{ fontSize: 16, color: s.done ? "#06140C" : "#3A443F" }} aria-hidden="true" />
                 </button>
               </div>
               <div style={css("font:500 11px 'JetBrains Mono';color:#5E6A66;margin-top:6px;padding-left:38px")}>Anterior: {e.prev}</div>
