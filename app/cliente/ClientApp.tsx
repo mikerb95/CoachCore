@@ -14,13 +14,15 @@ type Screen = "home" | "log" | "machines" | "progress" | "coach" | "celebrate";
 type Msg = { from: "me" | "coach"; text: string; time: string };
 type SetEntry = { w?: number; r?: number; done?: boolean };
 
-const exercises = [
-  { name: "Sentadilla trasera", meta: "5 × 5  ·  82.5% RM  ·  desc. 180s", count: 5, w: 102.5, r: 5, prev: "100" + U + " × 5" },
-  { name: "Press de banca", meta: "5 × 5  ·  80% RM  ·  desc. 180s", count: 5, w: 92.5, r: 5, prev: "90" + U + " × 5" },
+type Exercise = { name: string; meta: string; count: number; w: number; r: number; prev: string; machineId?: string };
+
+const exercises: Exercise[] = [
+  { name: "Sentadilla trasera", meta: "5 × 5  ·  82.5% RM  ·  desc. 180s", count: 5, w: 102.5, r: 5, prev: "100" + U + " × 5", machineId: "power-rack" },
+  { name: "Press de banca", meta: "5 × 5  ·  80% RM  ·  desc. 180s", count: 5, w: 92.5, r: 5, prev: "90" + U + " × 5", machineId: "bench-flat" },
   { name: "Remo con barra", meta: "4 × 8  ·  RPE 8  ·  desc. 120s", count: 4, w: 72.5, r: 8, prev: "70" + U + " × 8" },
-  { name: "Press militar", meta: "3 × 10  ·  RPE 8  ·  desc. 90s", count: 3, w: 47.5, r: 10, prev: "45" + U + " × 10" },
+  { name: "Press militar", meta: "3 × 10  ·  RPE 8  ·  desc. 90s", count: 3, w: 47.5, r: 10, prev: "45" + U + " × 10", machineId: "shoulder-press" },
   { name: "Zancadas mancuerna", meta: "3 × 12  ·  RPE 8  ·  desc. 90s", count: 3, w: 24, r: 12, prev: "22" + U + " × 12" },
-  { name: "Curl femoral", meta: "3 × 12  ·  RPE 8  ·  desc. 75s", count: 3, w: 42.5, r: 12, prev: "40" + U + " × 12" },
+  { name: "Curl femoral", meta: "3 × 12  ·  RPE 8  ·  desc. 75s", count: 3, w: 42.5, r: 12, prev: "40" + U + " × 12", machineId: "leg-curl" },
   { name: "Plancha", meta: "3 × 45s  ·  RPE 7  ·  desc. 60s", count: 3, w: 0, r: 45, prev: "40s" },
 ];
 
