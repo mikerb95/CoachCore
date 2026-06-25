@@ -51,13 +51,6 @@ export default function ResetForm({ token }: { token: string }) {
   );
 }
 
-// El action devuelve {} en éxito; distinguimos "éxito" de "estado inicial"
-// marcando el objeto vacío como enviado.
-function hasSubmitted(state: ResetState): boolean {
-  return Object.keys(state).length === 0 && state !== INITIAL;
-}
-const INITIAL: ResetState = {};
-
 function Notice({ color, icon, children }: { color: string; icon: string; children: React.ReactNode }) {
   return (
     <div style={{ ...css("margin-top:26px;border-radius:14px;padding:16px;font:500 13.5px 'IBM Plex Sans';color:#9FB0A8;line-height:1.5;display:flex;gap:10px"), background: "rgba(255,255,255,.03)", border: `1px solid ${color === "var(--data)" ? "rgba(56,224,123,.3)" : "rgba(255,107,138,.3)"}` }}>
