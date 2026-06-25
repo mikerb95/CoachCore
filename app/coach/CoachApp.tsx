@@ -105,7 +105,9 @@ export default function CoachApp({ user }: { user: { name: string; email: string
 }
 
 /* ============================ DASHBOARD ============================ */
-function Dashboard({ onStart }: { onStart: (id: number) => void }) {
+function Dashboard({ onStart, onMachines }: { onStart: (id: number) => void; onMachines: () => void }) {
+  const maintenance = machines.filter((m) => m.status === "mantenimiento").length;
+  const previewIllos = ["leg-press", "lat-pulldown", "smith", "rower"];
   const days = [
     ["lun", "23"], ["mar", "24"], ["mié", "25"], ["jue", "26"], ["vie", "27"], ["sáb", "28"], ["dom", "29"],
   ].map((d, i) => {
