@@ -16,7 +16,7 @@ type Screen = "home" | "log" | "machines" | "progress" | "coach" | "celebrate";
 const CLIENT_NAV: NavItem[] = [
   { key: "home", icon: "ph-fill ph-house", label: "Hoy" },
   { key: "machines", icon: "ph-fill ph-squares-four", label: "Máquinas" },
-  { key: "log", icon: "ph-fill ph-barbell", label: "Entrenar", accent: true },
+  { key: "log", icon: "ph-fill ph-barbell", label: "Entrenar" },
   { key: "progress", icon: "ph-fill ph-chart-line-up", label: "Progreso" },
   { key: "coach", icon: "ph-fill ph-chat-circle", label: "Coach" },
 ];
@@ -44,6 +44,7 @@ const seed = (): Msg[] => [
 ];
 
 export default function ClientApp({ user }: { user: { name: string; email: string } }) {
+  const isDesktop = useIsDesktop();
   const [screen, setScreen] = useState<Screen>("home");
   const [weight, setWeight] = useState(78.4);
   const [sleep, setSleep] = useState(7.5);
