@@ -247,6 +247,8 @@ function Home({
           {saved ? "Check-in enviado" : "Enviar check-in"}
         </button>
       </div>
+
+      <AccountActions name={user.name} email={user.email} />
     </div>
   );
 }
