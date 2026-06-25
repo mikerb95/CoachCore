@@ -141,7 +141,7 @@ export default function ClientApp({ user }: { user: { name: string; email: strin
             nextEx={() => setEx((e) => { if (e >= exercises.length - 1) { setScreen("celebrate"); return e; } return e + 1; })}
           />
         )}
-        {screen === "machines" && <MachineInventory />}
+        {screen === "machines" && <MachineInventory historyFor={machineHistory} />}
         {screen === "progress" && <Progress />}
         {screen === "coach" && (
           <Coach messages={messages || seed()} draft={draft} setDraft={setDraft} send={send} />

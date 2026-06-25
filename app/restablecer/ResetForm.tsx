@@ -7,7 +7,7 @@ import { resetPassword, type ResetState } from "@/app/actions/password";
 
 export default function ResetForm({ token }: { token: string }) {
   const [state, action, pending] = useActionState<ResetState, FormData>(resetPassword, {});
-  const done = !pending && !state.error && !state.fieldErrors && state.fieldErrors === undefined && hasSubmitted(state);
+  const done = !!state.ok;
 
   return (
     <div style={css("flex:1;display:flex;flex-direction:column;padding:0 24px 30px;animation:ccUp14 .5s cubic-bezier(.2,.8,.2,1)")}>
