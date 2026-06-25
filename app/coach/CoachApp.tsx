@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { css } from "@/lib/css";
-import { PhoneFrame, StatusBar, Toast } from "@/components/Frame";
+import { PhoneFrame, DesktopFrame, StatusBar, Toast, useIsDesktop, type NavItem } from "@/components/Frame";
 import { AccountActions } from "@/components/AccountActions";
 import { MachineInventory } from "@/components/Machines";
 import { machines, MachineIllo } from "@/lib/machines";
@@ -11,6 +11,14 @@ import { DATA, ACTION, MUTED, clients, byId, rawSessions, fmt, presentClient, ty
 import { createClient, deleteClient, seedDemoClients } from "@/app/actions/data";
 
 type Screen = "dashboard" | "roster" | "builder" | "live" | "analytics" | "settings" | "machines";
+
+const COACH_NAV: NavItem[] = [
+  { key: "dashboard", icon: "ph-fill ph-house", label: "Hoy" },
+  { key: "roster", icon: "ph-fill ph-users-three", label: "Clientes" },
+  { key: "builder", icon: "ph-fill ph-plus-circle", label: "Crear", accent: true },
+  { key: "analytics", icon: "ph-fill ph-chart-line-up", label: "Progreso" },
+  { key: "settings", icon: "ph-fill ph-gear-six", label: "Ajustes" },
+];
 
 export default function CoachApp({ user, initialClients }: { user: { name: string; email: string }; initialClients: RawClient[] }) {
   const router = useRouter();
