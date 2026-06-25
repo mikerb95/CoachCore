@@ -63,7 +63,11 @@ export default function ClientApp({ user }: { user: { name: string; email: strin
     if (toastTimer.current) clearTimeout(toastTimer.current);
     toastTimer.current = setTimeout(() => setToast(""), 2200);
   };
-  const saveCheckin = () => { setCheckinSaved(true); showToast("Check-in enviado a Diego"); };
+  const saveCheckin = () => {
+    setCheckinSaved(true);
+    showToast("Check-in enviado a Diego");
+    void saveCheckinDB({ weightKg: weight, sleepHours: sleep, energy, soreness }).catch(() => {});
+  };
   const setSet = (key: string, field: keyof SetEntry, val: number | boolean) =>
     setSets((s) => ({ ...s, [key]: { ...(s[key] || {}), [field]: val } }));
   const toggleRest = () => {
