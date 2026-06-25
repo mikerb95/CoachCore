@@ -4,11 +4,12 @@ import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { css } from "@/lib/css";
 import { PhoneFrame, StatusBar, Toast } from "@/components/Frame";
+import { AccountActions } from "@/components/AccountActions";
 import { DATA, ACTION, MUTED, clients, byId, rawSessions, fmt } from "./data";
 
 type Screen = "dashboard" | "roster" | "builder" | "live" | "analytics" | "settings";
 
-export default function CoachApp() {
+export default function CoachApp({ user }: { user: { name: string; email: string } }) {
   const [screen, setScreen] = useState<Screen>("dashboard");
   const [query, setQuery] = useState("");
   const [profileId, setProfileId] = useState<number | null>(null);
