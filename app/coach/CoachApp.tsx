@@ -69,7 +69,7 @@ export default function CoachApp({ user }: { user: { name: string; email: string
 
       <div className="cc-scroll" style={css("flex:1;overflow-y:auto;position:relative;background:#0A0E0F")}>
         {screen === "dashboard" && <Dashboard onStart={startSession} onMachines={() => setScreen("machines")} />}
-        {screen === "machines" && <MachineInventory onBack={() => go("dashboard")} />}
+        {screen === "machines" && <MachineInventory onBack={() => go("dashboard")} historyFor={coachHistoryFor} />}
         {screen === "roster" && (
           <Roster
             query={query}
