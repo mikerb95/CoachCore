@@ -94,6 +94,7 @@ export default function ClientApp({ user }: { user: { name: string; email: strin
       <div className="cc-scroll" style={css("flex:1;overflow-y:auto;position:relative;background:#0A0E0F")}>
         {screen === "home" && (
           <Home
+            user={user}
             weight={weight} sleep={sleep} energy={energy} soreness={soreness} saved={checkinSaved}
             onStart={() => setScreen("log")}
             wInc={() => { setWeight((w) => Math.round((w + 0.1) * 10) / 10); setCheckinSaved(false); }}
