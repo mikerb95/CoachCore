@@ -143,22 +143,32 @@ export default function CoachApp({ user, initialClients }: { user: { name: strin
 }
 
 /* ============================ DASHBOARD ============================ */
+const DAY_FULL = ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado", "Domingo"];
+const TODAY_IDX = 1;
+
 function Dashboard({ onStart, onMachines }: { onStart: (id: number) => void; onMachines: () => void }) {
+  const [selectedDay, setSelectedDay] = useState(TODAY_IDX);
   const maintenance = machines.filter((m) => m.status === "mantenimiento").length;
   const previewIllos = ["leg-press", "lat-pulldown", "smith", "rower"];
-  const days = [
+  const DAY_DATA = [
     ["lun", "23"], ["mar", "24"], ["mié", "25"], ["jue", "26"], ["vie", "27"], ["sáb", "28"], ["dom", "29"],
-  ].map((d, i) => {
-    const active = i === 1;
+  ];
+  const days = DAY_DATA.map((d, i) => {
+    const active = i === selectedDay;
+    const past = i < TODAY_IDX;
     return {
       dow: d[0], num: d[1],
       bg: active ? DATA : "#12181A",
       border: active ? DATA : "rgba(255,255,255,.05)",
       fg: active ? "#06140C" : "#E6ECEA",
       sub: active ? "rgba(6,20,12,.7)" : "#6E7A76",
-      dot: active ? "#06140C" : i < 1 ? MUTED : "transparent",
+      dot: active ? "#06140C" : past ? MUTED : "transparent",
     };
   });
+  const isToday = selectedDay === TODAY_IDX;
+  const selectedNum = DAY_DATA[selectedDay][1];
+  const headerTitle = isToday ? "Hoy" : DAY_FULL[selectedDay];
+  const headerSub = `${DAY_FULL[selectedDay]} · ${selectedNum} Jun`;
 
   const summary = [
     { icon: "ph-fill ph-users-three", value: "24", label: "Clientes activos", col: DATA },
