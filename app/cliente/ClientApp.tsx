@@ -79,7 +79,7 @@ export default function ClientApp({ user }: { user: { name: string; email: strin
     try {
       await saveCheckinDB({ weightKg: weight, sleepHours: sleep, energy, soreness });
       setCheckinSaved(true);
-      showToast("Check-in enviado a Diego");
+      showToast("Check-in enviado a Juan Camilo");
     } catch {
       // Datos de salud: nunca damos por guardado algo que falló.
       showToast("No se pudo enviar el check-in. Revisa tu conexión e inténtalo.");
