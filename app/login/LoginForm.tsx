@@ -57,18 +57,35 @@ export default function LoginForm({ justRegistered }: { justRegistered: boolean 
 }
 
 function Field({ icon, name, type, placeholder, autoComplete, label }: { icon: string; name: string; type: string; placeholder: string; autoComplete?: string; label: string }) {
+  const [reveal, setReveal] = useState(false);
+  const isPassword = type === "password";
   return (
     <div style={css("display:flex;align-items:center;gap:10px;background:#12181A;border:1px solid rgba(255,255,255,.07);border-radius:14px;padding:0 14px;height:52px")}>
       <i className={icon} style={css("color:#6E7A76;font-size:18px")} aria-hidden="true" />
       <input
         name={name}
-        type={type}
+        type={isPassword && reveal ? "text" : type}
         placeholder={placeholder}
         autoComplete={autoComplete}
         aria-label={label}
         required
         style={css("flex:1;background:none;border:none;outline:none;color:#fff;font:500 14px 'IBM Plex Sans'")}
       />
+      {isPassword && <PasswordToggle reveal={reveal} onToggle={() => setReveal((v) => !v)} />}
     </div>
+  );
+}
+
+function PasswordToggle({ reveal, onToggle }: { reveal: boolean; onToggle: () => void }) {
+  return (
+    <button
+      type="button"
+      onClick={onToggle}
+      aria-label={reveal ? "Ocultar contraseña" : "Mostrar contraseña"}
+      aria-pressed={reveal}
+      style={css("flex:none;display:flex;align-items:center;justify-content:center;background:none;border:none;padding:0;cursor:pointer;color:#6E7A76")}
+    >
+      <i className={reveal ? "ph ph-eye-slash" : "ph ph-eye"} style={css("font-size:18px")} aria-hidden="true" />
+    </button>
   );
 }
