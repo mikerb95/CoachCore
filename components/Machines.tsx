@@ -148,9 +148,6 @@ function MachineSheet({
           <div style={css("flex:1;min-width:0")}>
             <div style={css("font:700 20px 'Space Grotesk';color:#fff;letter-spacing:-.3px;line-height:1.15")}>{machine.name}</div>
             <div style={css("font:500 12.5px 'IBM Plex Sans';color:#6E7A76;margin-top:3px")}>{catLabel} · {machine.muscle}</div>
-            <span style={{ ...css("display:inline-flex;align-items:center;gap:5px;font:600 11px 'IBM Plex Sans';padding:3px 9px;border-radius:8px;margin-top:8px"), color: st.col, background: st.bg }}>
-              <span style={{ ...css("width:6px;height:6px;border-radius:50%"), background: st.col }} />{st.label}
-            </span>
           </div>
         </div>
 
