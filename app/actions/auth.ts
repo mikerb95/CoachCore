@@ -87,7 +87,7 @@ export async function registerAction(
   redirect("/login?registered=1");
 }
 
-/** Exporta todos los datos del usuario autenticado (derecho de acceso/portabilidad RGPD). */
+/** Exporta todos los datos del usuario autenticado (derecho de acceso/portabilidad — Ley 1581 de 2012). */
 export async function exportMyData(): Promise<string> {
   const session = await auth();
   if (!session?.user?.id) throw new Error("No autenticado");
@@ -102,7 +102,7 @@ export async function exportMyData(): Promise<string> {
   return JSON.stringify({ exportedAt: new Date().toISOString(), user: safe }, null, 2);
 }
 
-/** Elimina la cuenta del usuario y cierra sesión (derecho de supresión RGPD). */
+/** Elimina la cuenta del usuario y cierra sesión (derecho de supresión — Ley 1581 de 2012). */
 export async function deleteMyAccount(): Promise<void> {
   const session = await auth();
   if (!session?.user?.id) throw new Error("No autenticado");
