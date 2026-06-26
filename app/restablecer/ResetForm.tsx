@@ -45,7 +45,7 @@ export default function ResetForm({ token }: { token: string }) {
               <i className="ph-fill ph-warning-circle" />{state.error}
             </div>
           )}
-          <button type="submit" disabled={pending} style={{ ...css("margin-top:6px;height:52px;border:none;border-radius:15px;background:var(--data);color:#06140C;font:700 15px 'IBM Plex Sans';cursor:pointer"), opacity: pending ? 0.6 : 1 }}>
+          <button type="submit" disabled={pending} className="cc-press cc-btn-primary" style={{ ...css("margin-top:6px;height:52px;border:none;border-radius:15px;background:var(--data);color:#06140C;font:700 15px 'IBM Plex Sans';cursor:pointer"), opacity: pending ? 0.6 : 1 }}>
             {pending ? "Guardando…" : "Guardar contraseña"}
           </button>
         </form>
