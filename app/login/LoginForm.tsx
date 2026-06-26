@@ -3,6 +3,7 @@
 import { useActionState, useState } from "react";
 import Link from "next/link";
 import { css } from "@/lib/css";
+import PasswordToggle from "@/components/PasswordToggle";
 import { loginAction, type LoginState } from "@/app/actions/auth";
 
 export default function LoginForm({ justRegistered }: { justRegistered: boolean }) {
@@ -73,19 +74,5 @@ function Field({ icon, name, type, placeholder, autoComplete, label }: { icon: s
       />
       {isPassword && <PasswordToggle reveal={reveal} onToggle={() => setReveal((v) => !v)} />}
     </div>
-  );
-}
-
-function PasswordToggle({ reveal, onToggle }: { reveal: boolean; onToggle: () => void }) {
-  return (
-    <button
-      type="button"
-      onClick={onToggle}
-      aria-label={reveal ? "Ocultar contraseña" : "Mostrar contraseña"}
-      aria-pressed={reveal}
-      style={css("flex:none;display:flex;align-items:center;justify-content:center;background:none;border:none;padding:0;cursor:pointer;color:#6E7A76")}
-    >
-      <i className={reveal ? "ph ph-eye-slash" : "ph ph-eye"} style={css("font-size:18px")} aria-hidden="true" />
-    </button>
   );
 }
