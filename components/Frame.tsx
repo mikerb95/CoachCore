@@ -24,31 +24,45 @@ export function Icon({ name, style }: { name: string; style?: React.CSSPropertie
   return <i className={name} style={style} />;
 }
 
-/** The iOS-style status bar at the top of every screen. */
+/** Top spacer that respects the device safe area (notch). Collapses to a small
+ *  gap on devices without a notch instead of drawing a fake status bar. */
 export function StatusBar() {
+  return <div style={{ height: "max(env(safe-area-inset-top, 0px), 14px)", flex: "none" }} />;
+}
+
+/**
+ * Full-viewport mobile shell. Fills the screen edge to edge (no device bezel)
+ * and keeps a fixed height so the inner scroll area scrolls while the bottom
+ * nav stays pinned. Desktop uses {@link DesktopFrame} instead.
+ */
+export function PhoneFrame({ children, accent }: { children: ReactNode; accent?: string }) {
   return (
-    <div style={css("height:46px;flex:none;display:flex;align-items:center;justify-content:space-between;padding:0 26px;font:600 14px 'Space Grotesk';color:#E6ECEA;z-index:30")}>
-      <span>9:41</span>
-      <span style={css("display:flex;gap:7px;font-size:15px;color:#cfd6d3")}>
-        <Icon name="ph-fill ph-cell-signal-full" />
-        <Icon name="ph-fill ph-wifi-high" />
-        <Icon name="ph-fill ph-battery-high" />
-      </span>
+    <div
+      style={{
+        ...css("height:100dvh;width:100%;background:#0A0E0F;display:flex;flex-direction:column;overflow:hidden;position:relative;font-family:'IBM Plex Sans',system-ui,sans-serif"),
+        ...(accent ? cssVars(accent) : {}),
+      }}
+    >
+      {children}
     </div>
   );
 }
 
-/** Notch + device bezel that frames every CoachCore screen. */
-export function PhoneFrame({ children, accent }: { children: ReactNode; accent?: string }) {
+/**
+ * Full-viewport shell for the auth & marketing screens (home, login, register,
+ * password recovery, privacy). No device bezel; content is centred in a
+ * comfortable column on wide screens and fills the width on phones.
+ */
+export function ScreenShell({ children, accent }: { children: ReactNode; accent?: string }) {
   return (
-    <div style={css("min-height:100vh;background:radial-gradient(120% 90% at 50% 0%,#0E1416 0%,#060809 60%);display:flex;align-items:center;justify-content:center;padding:28px;font-family:'IBM Plex Sans',system-ui,sans-serif")}>
-      <div style={{ display: "contents", ...(accent ? cssVars(accent) : {}) }}>
-        <div style={css("width:392px;max-width:100%;height:850px;max-height:calc(100vh - 24px);background:#0A0E0F;border-radius:46px;padding:11px;box-shadow:0 50px 120px rgba(0,0,0,.7),inset 0 0 0 1px rgba(255,255,255,.05);position:relative")}>
-          <div style={css("position:absolute;top:20px;left:50%;transform:translateX(-50%);width:120px;height:30px;background:#000;border-radius:18px;z-index:40")} />
-          <div style={css("width:100%;height:100%;background:#0A0E0F;border-radius:36px;overflow:hidden;position:relative;display:flex;flex-direction:column")}>
-            {children}
-          </div>
-        </div>
+    <div
+      style={{
+        ...css("min-height:100dvh;width:100%;background:radial-gradient(120% 90% at 50% 0%,#0E1416 0%,#060809 60%);display:flex;flex-direction:column;align-items:center;font-family:'IBM Plex Sans',system-ui,sans-serif"),
+        ...(accent ? cssVars(accent) : {}),
+      }}
+    >
+      <div style={css("width:100%;max-width:440px;min-height:100dvh;display:flex;flex-direction:column")}>
+        {children}
       </div>
     </div>
   );
