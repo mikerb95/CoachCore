@@ -44,7 +44,7 @@ export default function RecoverForm() {
 
       <div style={css("flex:1")} />
       <div style={css("text-align:center;font:500 13px 'IBM Plex Sans';color:#8A938F;margin-top:20px")}>
-        <Link href="/login" style={css("color:var(--data);font-weight:600")}>Volver a iniciar sesión</Link>
+        <Link href="/login" className="cc-press cc-link" style={css("color:var(--data);font-weight:600")}>Volver a iniciar sesión</Link>
       </div>
     </div>
   );
