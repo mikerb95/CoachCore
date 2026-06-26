@@ -566,7 +566,7 @@ function Coach({ messages, draft, setDraft, send }: { messages: Msg[]; draft: st
   return (
     <div style={css("display:flex;flex-direction:column;height:100%;animation:ccUp .4s ease")}>
       <div style={css("padding:6px 18px 14px;border-bottom:1px solid rgba(255,255,255,.05);display:flex;align-items:center;gap:12px;flex:none")}>
-        <div style={css("width:46px;height:46px;border-radius:14px;background:linear-gradient(135deg,#23303d,#19232d);display:flex;align-items:center;justify-content:center;font:700 15px 'Space Grotesk';color:#5AA9FF")}>DS</div>
+        <div style={css("width:46px;height:46px;border-radius:14px;background:linear-gradient(135deg,#23303d,#19232d);display:flex;align-items:center;justify-content:center;font:700 15px 'Space Grotesk';color:#5AA9FF")}>CL</div>
         <div style={css("flex:1")}>
           <div style={css("font:700 16px 'Space Grotesk';color:#fff")}>Camilo Llano</div>
           <div style={css("font:500 11.5px 'IBM Plex Sans';color:var(--data);display:flex;align-items:center;gap:5px")}>

@@ -646,7 +646,7 @@ function Analytics() {
 
   return (
     <div style={css("padding:8px 18px 110px;animation:ccUp .45s cubic-bezier(.2,.8,.2,1)")}>
-      <div style={css("font:500 12px 'IBM Plex Sans';color:#6E7A76;text-transform:uppercase;letter-spacing:.3px")}>Progreso · Marcos Vidal</div>
+      <div style={css("font:500 12px 'IBM Plex Sans';color:#6E7A76;text-transform:uppercase;letter-spacing:.3px")}>Progreso · Andrés Martínez</div>
       <div style={css("font:700 28px 'Space Grotesk';color:#fff;letter-spacing:-.5px;margin:2px 0 18px")}>Analítica</div>
 
       <div style={css("background:#12181A;border:1px solid rgba(255,255,255,.05);border-radius:18px;padding:16px;margin-bottom:14px")}>
