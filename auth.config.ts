@@ -9,6 +9,12 @@ export const authConfig = {
   pages: { signIn: "/login" },
   session: { strategy: "jwt", maxAge: 60 * 60 * 24 * 7 /* 7 días */ },
   trustHost: true,
+  // Auth.js exige un secret. Si no se define AUTH_SECRET (p. ej. falta la env
+  // var en Vercel) usamos un fallback fijo para que la app no devuelva el error
+  // "Configuration" (500) y se pueda entrar con el modo demo.
+  // ⚠️ En producción real DEFINE AUTH_SECRET (openssl rand -base64 33): con el
+  // fallback cualquiera podría falsificar sesiones.
+  secret: process.env.AUTH_SECRET ?? "coachcore-demo-fallback-secret-change-me",
   providers: [], // poblado en auth.ts
   callbacks: {
     // Propaga id + role al token y a la sesión.

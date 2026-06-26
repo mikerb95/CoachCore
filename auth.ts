@@ -45,12 +45,17 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         const rl = await rateLimit(`login-authz:${ip}`, 10, 5 * 60_000);
         if (!rl.success) return null;
 
-        // Modo demo: sin BD, validamos contra los usuarios en memoria.
-        if (!process.env.DATABASE_URL) {
-          const demo = DEMO_USERS.find((u) => u.email === email);
-          if (!demo || demo.password !== password) return null;
+        // Modo demo: los usuarios demo SIEMPRE pueden entrar (haya o no BD), para
+        // poder enseñar la app aunque falten variables de entorno. Se comprueba
+        // antes que la BD; el resto de credenciales siguen el flujo normal.
+        const demo = DEMO_USERS.find((u) => u.email === email);
+        if (demo) {
+          if (demo.password !== password) return null;
           return { id: demo.id, email: demo.email, name: demo.name, role: demo.role };
         }
+
+        // Sin BD configurada no hay más usuarios que los demo.
+        if (!process.env.DATABASE_URL) return null;
 
         const found = await db
           .select()
