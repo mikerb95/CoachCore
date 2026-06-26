@@ -33,7 +33,7 @@ async function main() {
   const [coach] = await db
     .insert(schema.users)
     .values({
-      name: "Juan Camilo Restrepo",
+      name: "Camilo Llano",
       email: "coach@demo.com",
       passwordHash: hash,
       role: "entrenador",
@@ -105,7 +105,7 @@ async function main() {
     console.log(`✅  Roster: ${insertedClients.map((c) => c.name).join(", ")}`);
   }
 
-  // ── 3. Check-ins de demo para Marcos Vidal ───────────────────────────────
+  // ── 3. Check-ins de demo para Andrés Martínez ────────────────────────────
   const marcosClientRow = await db
     .select({ id: schema.clients.id })
     .from(schema.clients)
