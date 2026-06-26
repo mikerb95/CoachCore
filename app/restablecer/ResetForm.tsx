@@ -27,7 +27,7 @@ export default function ResetForm({ token }: { token: string }) {
         </Notice>
       ) : done ? (
         <Notice color="var(--data)" icon="ph-fill ph-check-circle">
-          Contraseña actualizada. Ya puedes <Link href="/login" style={css("color:var(--data);font-weight:600")}>iniciar sesión</Link>.
+          Contraseña actualizada. Ya puedes <Link href="/login" className="cc-press cc-link" style={css("color:var(--data);font-weight:600")}>iniciar sesión</Link>.
         </Notice>
       ) : (
         <form action={action} style={css("display:flex;flex-direction:column;gap:12px;margin-top:24px")}>
