@@ -1,7 +1,7 @@
 import { redirect } from "next/navigation";
 import { auth } from "@/auth";
 import { css } from "@/lib/css";
-import { StatusBar } from "@/components/Frame";
+import { ScreenShell, StatusBar } from "@/components/Frame";
 import RecoverForm from "./RecoverForm";
 
 export const metadata = { title: "Recuperar acceso · CoachCore" };
