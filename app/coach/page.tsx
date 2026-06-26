@@ -15,6 +15,7 @@ export default async function CoachPage() {
       user={{ name: session.user.name ?? "Entrenador", email: session.user.email ?? "" }}
       initialClients={roster.map((c) => ({
         id: c.id,
+        code: c.code,
         name: c.name,
         goal: c.goal,
         level: c.level,

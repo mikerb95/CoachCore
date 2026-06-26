@@ -1,10 +1,10 @@
 "use server";
 
-import { and, desc, eq } from "drizzle-orm";
+import { and, desc, eq, isNotNull, sql } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 import { db } from "@/db";
 import { auth } from "@/auth";
-import { clients, checkins, measurements, messages, sessions, sessionSets } from "@/db/schema";
+import { users, clients, checkins, measurements, messages, sessions, sessionSets } from "@/db/schema";
 import type { Client, Message, Session, SessionSet } from "@/db/schema";
 
 async function requireUser(role?: "entrenador" | "cliente") {
@@ -31,6 +31,8 @@ function demoRoster(trainerId: string): Client[] {
     id: `demo-client-${i}`,
     trainerId,
     userId: null,
+    code: `AA${String(i + 1).padStart(4, "0")}`,
+    seq: i + 1,
     name: c.name,
     goal: c.goal,
     level: c.level,
@@ -50,6 +52,31 @@ export async function listClients(): Promise<Client[]> {
 
 const GOALS = ["Hipertrofia", "Pérdida de grasa", "Fuerza", "Rehabilitación"] as const;
 
+/* ── ID público del cliente: 2 letras (entrenador) + 4 dígitos (consecutivo) ── */
+
+// 0 → "AA", 25 → "AZ", 26 → "BA", … 675 → "ZZ".
+function codeFromIndex(i: number): string {
+  return String.fromCharCode(65 + Math.floor(i / 26)) + String.fromCharCode(65 + (i % 26));
+}
+function indexFromCode(code: string): number {
+  return (code.charCodeAt(0) - 65) * 26 + (code.charCodeAt(1) - 65);
+}
+
+/** Devuelve el código de 2 letras del entrenador, asignando el siguiente libre si aún no tiene. */
+async function getOrAssignCoachCode(trainerId: string): Promise<string> {
+  const [me] = await db.select({ coachCode: users.coachCode }).from(users).where(eq(users.id, trainerId)).limit(1);
+  if (me?.coachCode) return me.coachCode;
+
+  const taken = await db.select({ coachCode: users.coachCode }).from(users).where(isNotNull(users.coachCode));
+  const maxIdx = taken.reduce((m, r) => Math.max(m, indexFromCode(r.coachCode!)), -1);
+  const next = maxIdx + 1;
+  if (next > 675) throw new Error("Se agotaron los códigos de entrenador (ZZ)");
+
+  const code = codeFromIndex(next);
+  await db.update(users).set({ coachCode: code }).where(eq(users.id, trainerId));
+  return code;
+}
+
 export type CreateClientState = { error?: string };
 
 export async function createClient(_prev: CreateClientState, formData: FormData): Promise<CreateClientState> {
@@ -63,12 +90,24 @@ export async function createClient(_prev: CreateClientState, formData: FormData)
   if (name.length < 2) return { error: "El nombre es demasiado corto" };
   if (!GOALS.includes(goal as (typeof GOALS)[number])) return { error: "Objetivo no válido" };
 
+  // Genera el ID público: prefijo del entrenador + consecutivo del cliente.
+  const coachCode = await getOrAssignCoachCode(user.id);
+  const [{ maxSeq }] = await db
+    .select({ maxSeq: sql<number>`coalesce(max(${clients.seq}), 0)` })
+    .from(clients)
+    .where(eq(clients.trainerId, user.id));
+  const seq = Number(maxSeq) + 1;
+  if (seq > 9999) return { error: "Has alcanzado el máximo de clientes (9999)" };
+  const code = `${coachCode}${String(seq).padStart(4, "0")}`;
+
   await db.insert(clients).values({
     trainerId: user.id,
     name,
     goal: goal as (typeof GOALS)[number],
     level,
     age,
+    code,
+    seq,
   });
   revalidatePath("/coach");
   return {};

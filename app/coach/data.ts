@@ -53,6 +53,7 @@ export const fmt = (s: number) => {
 
 export type RawClient = {
   id: string;
+  code: string | null;
   name: string;
   goal: string;
   level: string;
@@ -91,6 +92,7 @@ export function presentClient(c: RawClient, idx: number) {
   const active = c.status === "Activo";
   return {
     id: idx, // índice numérico estable para el estado de UI
+    code: c.code ?? "—", // ID público (AA0001)
     name: c.name,
     initials: initialsOf(c.name),
     goal: c.goal,

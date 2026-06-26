@@ -356,7 +356,10 @@ function Roster({
           <div key={c.id} onClick={() => onOpen(c.id)} style={css("background:#12181A;border:1px solid rgba(255,255,255,.05);border-radius:16px;padding:13px;display:flex;align-items:center;gap:12px;margin-bottom:9px;cursor:pointer")}>
             <div style={{ ...css("width:46px;height:46px;border-radius:14px;flex:none;display:flex;align-items:center;justify-content:center;font:700 14px 'Space Grotesk';color:#E6ECEA"), background: c.bg }}>{c.initials}</div>
             <div style={css("flex:1;min-width:0")}>
-              <div style={css("font:600 15px 'IBM Plex Sans';color:#fff")}>{c.name}</div>
+              <div style={css("display:flex;align-items:center;gap:7px")}>
+                <span style={css("font:600 15px 'IBM Plex Sans';color:#fff")}>{c.name}</span>
+                <span style={css("font:600 10.5px 'Space Grotesk';letter-spacing:.5px;color:#8A938F;background:#0A0F11;border:1px solid rgba(255,255,255,.07);border-radius:6px;padding:1px 6px")}>{c.code}</span>
+              </div>
               <div style={css("display:flex;align-items:center;gap:6px;margin-top:4px")}>
                 <span style={{ ...css("display:inline-flex;align-items:center;gap:4px;font:600 11px 'IBM Plex Sans';padding:2px 7px;border-radius:6px"), color: c.goalCol, background: c.goalBg }}>
                   <i className={c.goalIcon} style={css("font-size:12px")} />{c.goal}
@@ -383,7 +386,10 @@ function Roster({
               <div style={{ ...css("width:62px;height:62px;border-radius:18px;flex:none;display:flex;align-items:center;justify-content:center;font:700 20px 'Space Grotesk';color:#E6ECEA"), background: p.bg }}>{p.initials}</div>
               <div style={css("flex:1")}>
                 <div style={css("font:700 21px 'Space Grotesk';color:#fff;letter-spacing:-.3px")}>{p.name}</div>
-                <div style={css("font:500 13px 'IBM Plex Sans';color:#6E7A76;margin-top:2px")}>{p.level} · {p.age}</div>
+                <div style={css("display:flex;align-items:center;gap:8px;margin-top:4px")}>
+                  <span style={css("font:600 11px 'Space Grotesk';letter-spacing:.5px;color:var(--data);background:rgba(56,224,123,.1);border-radius:6px;padding:2px 7px")}>{p.code}</span>
+                  <span style={css("font:500 13px 'IBM Plex Sans';color:#6E7A76")}>{p.level} · {p.age}</span>
+                </div>
               </div>
               <div style={css("width:40px;height:40px;border-radius:12px;background:#171E21;display:flex;align-items:center;justify-content:center")}>
                 <i className="ph ph-chat-circle" style={css("color:#8A938F;font-size:18px")} />
