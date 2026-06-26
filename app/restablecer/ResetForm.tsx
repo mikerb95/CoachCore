@@ -3,6 +3,7 @@
 import { useActionState, useState } from "react";
 import Link from "next/link";
 import { css } from "@/lib/css";
+import PasswordToggle from "@/components/PasswordToggle";
 import { resetPassword, type ResetState } from "@/app/actions/password";
 
 export default function ResetForm({ token }: { token: string }) {
