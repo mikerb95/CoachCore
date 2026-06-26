@@ -1,5 +1,5 @@
 import { css } from "@/lib/css";
-import { StatusBar } from "@/components/Frame";
+import { ScreenShell, StatusBar } from "@/components/Frame";
 import ResetForm from "./ResetForm";
 
 export const metadata = { title: "Nueva contraseña · CoachCore" };
