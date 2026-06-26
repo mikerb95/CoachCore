@@ -119,11 +119,52 @@ export default function ClientApp({ user, assignedRoutines }: { user: { name: st
     });
   };
 
+  // Convert loaded routine exercises to the Exercise format used by Log
+  const activeExercises: Exercise[] = loadedRoutine
+    ? loadedRoutine.exercises.map((re) => ({
+        name: re.exerciseName,
+        meta: [
+          `${re.setCount} × ${re.repsTarget ? re.repsTarget + " reps" : re.durationSec ? re.durationSec + "s" : "—"}`,
+          re.weightKg ? re.weightKg + " kg" : null,
+          re.rpeTarget ? "RPE " + re.rpeTarget : null,
+          "desc. " + (re.restSec ?? 120) + "s",
+        ].filter(Boolean).join("  ·  "),
+        count: re.setCount,
+        w: re.weightKg ?? 0,
+        r: re.repsTarget ?? re.durationSec ?? 10,
+        prev: re.weightKg ? re.weightKg + U + " × " + (re.repsTarget ?? "—") : "—",
+      }))
+    : exercises;
+
+  const startLog = () => {
+    if (assignedRoutines.length > 0 && !loadedRoutine) {
+      setLogPickerVisible(true);
+      return;
+    }
+    setScreen("log");
+  };
+
+  const pickRoutine = async (routineId: string | null) => {
+    setLogPickerVisible(false);
+    if (!routineId) {
+      setLoadedRoutine(null);
+      setScreen("log");
+      return;
+    }
+    setLoadingRoutine(true);
+    try {
+      const r = await getRoutineWithExercises(routineId);
+      setLoadedRoutine(r);
+    } catch { /* use fallback */ }
+    finally { setLoadingRoutine(false); }
+    setScreen("log");
+  };
+
   // Real per-machine history: the exercises in this client's routine that use
   // the machine, showing what was actually logged this session (or the target).
   const machineHistory = (machineId: string) => {
     const out: { when: string; val: string }[] = [];
-    exercises.forEach((e, idx) => {
+    activeExercises.forEach((e, idx) => {
       if (e.machineId !== machineId) return;
       const done: SetEntry[] = [];
       for (let i = 1; i <= e.count; i++) {
@@ -149,7 +190,7 @@ export default function ClientApp({ user, assignedRoutines }: { user: { name: st
           <Home
             user={user}
             weight={weight} sleep={sleep} energy={energy} soreness={soreness} saved={checkinSaved}
-            onStart={() => setScreen("log")}
+            onStart={startLog}
             wInc={() => { setWeight((w) => Math.round((w + 0.1) * 10) / 10); setCheckinSaved(false); }}
             wDec={() => { setWeight((w) => Math.round((w - 0.1) * 10) / 10); setCheckinSaved(false); }}
             sInc={() => { setSleep((s) => Math.round((s + 0.5) * 10) / 10); setCheckinSaved(false); }}
@@ -162,9 +203,11 @@ export default function ClientApp({ user, assignedRoutines }: { user: { name: st
         {screen === "log" && (
           <Log
             ex={ex} sets={sets} rpe={rpe} restActive={restActive} rest={rest}
+            exercises={activeExercises}
             setSet={setSet} setRpe={setRpe} toggleRest={toggleRest}
             prevEx={() => setEx((e) => Math.max(0, e - 1))}
-            nextEx={() => setEx((e) => { if (e >= exercises.length - 1) { setScreen("celebrate"); return e; } return e + 1; })}
+            nextEx={() => setEx((e) => { if (e >= activeExercises.length - 1) { setScreen("celebrate"); return e; } return e + 1; })}
+            routineName={loadedRoutine?.name}
           />
         )}
         {screen === "machines" && <MachineInventory historyFor={machineHistory} />}
@@ -181,11 +224,48 @@ export default function ClientApp({ user, assignedRoutines }: { user: { name: st
     </>
   );
 
+  // Routine picker bottom sheet modal
+  const pickerModal = logPickerVisible && (
+    <>
+      <div onClick={() => setLogPickerVisible(false)} style={css("position:fixed;inset:0;z-index:200;background:rgba(0,0,0,.6)")} />
+      <div style={css("position:fixed;left:0;right:0;bottom:0;z-index:201;background:#0E1416;border-radius:28px 28px 0 0;border-top:1px solid rgba(255,255,255,.08);padding:18px 18px 38px;animation:ccSlide .35s cubic-bezier(.2,.8,.2,1)")}>
+        <div style={css("width:38px;height:4px;border-radius:3px;background:#2A3338;margin:0 auto 18px")} />
+        <div style={css("font:700 18px 'Space Grotesk';color:#fff;margin-bottom:4px")}>¿Qué rutina haces hoy?</div>
+        <div style={css("font:500 13px 'IBM Plex Sans';color:#6E7A76;margin-bottom:18px")}>Tu coach te tiene preparado</div>
+        {assignedRoutines.map((r) => (
+          <button key={r.id} onClick={() => void pickRoutine(r.id)}
+            style={css("width:100%;display:flex;align-items:center;gap:12px;background:#12181A;border:1px solid rgba(255,255,255,.07);border-radius:14px;padding:13px;margin-bottom:9px;cursor:pointer;text-align:left")}>
+            <div style={css("width:40px;height:40px;border-radius:11px;background:rgba(56,224,123,.12);display:flex;align-items:center;justify-content:center;flex:none")}>
+              <i className="ph-fill ph-barbell" style={css("color:#38E07B;font-size:18px")} />
+            </div>
+            <div style={css("flex:1")}>
+              <div style={css("font:600 14px 'IBM Plex Sans';color:#fff")}>{r.name}</div>
+              <div style={css("font:500 11.5px 'IBM Plex Sans';color:#6E7A76;margin-top:1px")}>{r.exerciseCount} ejercicios</div>
+            </div>
+            <i className="ph ph-caret-right" style={css("color:#4A554F;font-size:16px")} />
+          </button>
+        ))}
+        <button onClick={() => void pickRoutine(null)}
+          style={css("width:100%;height:46px;border:1px solid rgba(255,255,255,.08);border-radius:13px;background:none;color:#8A938F;font:600 13px 'IBM Plex Sans';cursor:pointer;margin-top:4px")}>
+          Sesión libre sin rutina
+        </button>
+      </div>
+    </>
+  );
+
+  const loadingOverlay = loadingRoutine && (
+    <div style={css("position:fixed;inset:0;z-index:300;background:rgba(7,11,12,.85);display:flex;align-items:center;justify-content:center")}>
+      <i className="ph ph-circle-notch" style={css("font-size:36px;color:#38E07B;animation:spin .8s linear infinite")} />
+    </div>
+  );
+
   if (isDesktop) {
     return (
       <DesktopFrame nav={CLIENT_NAV} current={screen} onNavigate={(k) => setScreen(k as Screen)}>
         <Toast msg={toast} />
         <div style={css("padding:24px 0 80px")}>{screens}</div>
+        {pickerModal}
+        {loadingOverlay}
       </DesktopFrame>
     );
   }
@@ -200,6 +280,8 @@ export default function ClientApp({ user, assignedRoutines }: { user: { name: st
       </div>
 
       {screen !== "celebrate" && <BottomNav screen={screen} go={setScreen} />}
+      {pickerModal}
+      {loadingOverlay}
     </PhoneFrame>
   );
 }
@@ -343,16 +425,17 @@ function Stepper({ icon, label, value, onDec, onInc, border }: { icon: string; l
 
 /* ============================ WORKOUT LOG ============================ */
 function Log({
-  ex, sets, rpe, restActive, rest, setSet, setRpe, toggleRest, prevEx, nextEx,
+  ex, sets, rpe, restActive, rest, exercises: exList, routineName, setSet, setRpe, toggleRest, prevEx, nextEx,
 }: {
   ex: number; sets: Record<string, SetEntry>; rpe: Record<number, number>;
   restActive: boolean; rest: number;
+  exercises: Exercise[]; routineName?: string;
   setSet: (key: string, field: keyof SetEntry, val: number | boolean) => void;
   setRpe: (fn: (r: Record<number, number>) => Record<number, number>) => void;
   toggleRest: () => void; prevEx: () => void; nextEx: () => void;
 }) {
-  const exIdx = Math.min(ex, exercises.length - 1);
-  const e = exercises[exIdx];
+  const exIdx = Math.min(ex, exList.length - 1);
+  const e = exList[exIdx];
   const getSet = (i: number) => {
     const k = exIdx + "-" + i;
     const st = sets[k] || {};
@@ -360,7 +443,7 @@ function Log({
   };
 
   let doneCount = 0, totalSets = 0;
-  exercises.forEach((ee, ei) => {
+  exList.forEach((ee, ei) => {
     for (let i = 1; i <= ee.count; i++) {
       totalSets++;
       const k = ei + "-" + i;
@@ -377,7 +460,7 @@ function Log({
     <div style={css("padding:6px 18px 110px;animation:ccPop .3s ease")}>
       <div style={css("display:flex;align-items:center;justify-content:space-between;margin-bottom:10px")}>
         <div>
-          <div style={css("font:600 11px 'JetBrains Mono';color:var(--data);letter-spacing:.5px")}>FUERZA · DÍA A</div>
+          <div style={css("font:600 11px 'JetBrains Mono';color:var(--data);letter-spacing:.5px")}>{routineName?.toUpperCase() ?? "ENTRENO"}</div>
           <div style={css("font:700 19px 'Space Grotesk';color:#fff;margin-top:2px")}>En progreso</div>
         </div>
         <div style={css("text-align:right")}>
@@ -390,7 +473,7 @@ function Log({
       </div>
 
       <div style={css("display:flex;align-items:center;justify-content:space-between;margin-bottom:6px")}>
-        <span style={css("font:600 11px 'JetBrains Mono';color:#8A938F")}>EJERCICIO {exIdx + 1} DE 7</span>
+        <span style={css("font:600 11px 'JetBrains Mono';color:#8A938F")}>EJERCICIO {exIdx + 1} DE {exList.length}</span>
         <div style={css("display:flex;gap:7px")}>
           <button onClick={prevEx} style={css("width:32px;height:32px;border-radius:10px;border:1px solid rgba(255,255,255,.1);background:#12181A;color:#C6CFCB;cursor:pointer;font-size:14px")}><i className="ph-bold ph-caret-left" /></button>
           <button onClick={nextEx} style={css("width:32px;height:32px;border-radius:10px;border:1px solid rgba(255,255,255,.1);background:#12181A;color:#C6CFCB;cursor:pointer;font-size:14px")}><i className="ph-bold ph-caret-right" /></button>

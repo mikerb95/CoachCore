@@ -94,29 +94,23 @@ export function MachineInventory({
         </div>
 
         <div style={css("display:grid;grid-template-columns:1fr 1fr;gap:10px")}>
-          {list.map((m) => {
-            const st = statusMeta[m.status];
-            return (
-              <button
-                key={m.id}
-                onClick={() => setSel(m)}
-                aria-label={`${m.name}. ${m.muscle}. Estado: ${st.label}. ${m.uses30d} usos en 30 días`}
-                style={css("display:block;text-align:left;width:100%;font:inherit;color:inherit;background:#12181A;border:1px solid rgba(255,255,255,.05);border-radius:16px;padding:12px;cursor:pointer")}
-              >
-                <div style={css("height:84px;border-radius:12px;background:#0E1416;border:1px solid rgba(255,255,255,.04);display:flex;align-items:center;justify-content:center;margin-bottom:10px")}>
-                  <MachineIllo id={m.id} size={88} />
-                </div>
-                <div style={css("font:600 13.5px 'IBM Plex Sans';color:#fff;line-height:1.25")}>{m.name}</div>
-                <div style={css("font:500 11px 'IBM Plex Sans';color:#6E7A76;margin-top:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis")}>{m.muscle}</div>
-                <div style={css("display:flex;align-items:center;justify-content:space-between;margin-top:9px")}>
-                  <span style={{ ...css("display:inline-flex;align-items:center;gap:5px;font:600 10.5px 'IBM Plex Sans';padding:3px 8px;border-radius:7px"), color: st.col, background: st.bg }}>
-                    <span style={{ ...css("width:5px;height:5px;border-radius:50%"), background: st.col }} aria-hidden="true" />{st.label}
-                  </span>
-                  <span style={css("font:500 10px 'JetBrains Mono';color:#5E6A66")}>{m.uses30d}↑</span>
-                </div>
-              </button>
-            );
-          })}
+          {list.map((m) => (
+            <button
+              key={m.id}
+              onClick={() => setSel(m)}
+              aria-label={`${m.name}. ${m.muscle}. ${m.uses30d} usos en 30 días`}
+              style={css("display:block;text-align:left;width:100%;font:inherit;color:inherit;background:#12181A;border:1px solid rgba(255,255,255,.05);border-radius:16px;padding:12px;cursor:pointer")}
+            >
+              <div style={css("height:84px;border-radius:12px;background:#0E1416;border:1px solid rgba(255,255,255,.04);display:flex;align-items:center;justify-content:center;margin-bottom:10px")}>
+                <MachineIllo id={m.id} size={88} />
+              </div>
+              <div style={css("font:600 13.5px 'IBM Plex Sans';color:#fff;line-height:1.25")}>{m.name}</div>
+              <div style={css("font:500 11px 'IBM Plex Sans';color:#6E7A76;margin-top:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis")}>{m.muscle}</div>
+              <div style={css("display:flex;align-items:center;justify-content:flex-end;margin-top:9px")}>
+                <span style={css("font:500 10px 'JetBrains Mono';color:#5E6A66")}>{m.uses30d}↑</span>
+              </div>
+            </button>
+          ))}
         </div>
       </div>
 
