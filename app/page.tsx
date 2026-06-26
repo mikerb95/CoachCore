@@ -26,10 +26,10 @@ export default async function HomePage() {
             </div>
 
             <div style={css("display:flex;flex-direction:column;gap:12px")}>
-              <Link href="/login" style={css("display:flex;align-items:center;justify-content:center;gap:8px;height:54px;border-radius:16px;background:var(--data);color:#06140C;font:700 15px 'IBM Plex Sans'")}>
+              <Link href="/login" className="cc-press cc-btn-primary" style={css("display:flex;align-items:center;justify-content:center;gap:8px;height:54px;border-radius:16px;background:var(--data);color:#06140C;font:700 15px 'IBM Plex Sans'")}>
                 Iniciar sesión<i className="ph-bold ph-arrow-right" />
               </Link>
-              <Link href="/register" style={css("display:flex;align-items:center;justify-content:center;height:54px;border-radius:16px;background:#12181A;border:1px solid rgba(255,255,255,.1);color:#E6ECEA;font:600 15px 'IBM Plex Sans'")}>
+              <Link href="/register" className="cc-press cc-btn-secondary" style={css("display:flex;align-items:center;justify-content:center;height:54px;border-radius:16px;background:#12181A;border:1px solid rgba(255,255,255,.1);color:#E6ECEA;font:600 15px 'IBM Plex Sans'")}>
                 Crear cuenta
               </Link>
             </div>

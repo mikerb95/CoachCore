@@ -16,8 +16,35 @@ async function requireUser(role?: "entrenador" | "cliente") {
 
 /* ───────────────────────── Coach: roster ───────────────────────── */
 
+// Roster de ejemplo para el modo demo (sin DATABASE_URL). Evita que la página
+// /coach reviente al consultar la BD cuando solo está el login en memoria.
+function demoRoster(trainerId: string): Client[] {
+  const base = [
+    { name: "Marcos Vidal", goal: "Hipertrofia", level: "Avanzado", age: 32, status: "Activo", injuries: "Sin lesiones activas. Molestia lumbar leve resuelta (mar. 2026)." },
+    { name: "Laura Pérez", goal: "Pérdida de grasa", level: "Intermedio", age: 28, status: "Activo", injuries: "Sin lesiones registradas." },
+    { name: "Diego Sánchez", goal: "Fuerza", level: "Avanzado", age: 35, status: "Descanso", injuries: "Hombro izq. — tendinitis manguito rotador (en seguimiento)." },
+    { name: "Ana Torres", goal: "Hipertrofia", level: "Principiante", age: 24, status: "Activo", injuries: "Sin lesiones registradas." },
+    { name: "Javier Ruiz", goal: "Rehabilitación", level: "Intermedio", age: 41, status: "Activo", injuries: "Rodilla der. — reconstrucción LCA (feb. 2026). Fase de fortalecimiento." },
+    { name: "Sofía Gómez", goal: "Fuerza", level: "Avanzado", age: 29, status: "Activo", injuries: "Sin lesiones registradas." },
+  ] as const;
+  return base.map((c, i) => ({
+    id: `demo-client-${i}`,
+    trainerId,
+    userId: null,
+    name: c.name,
+    goal: c.goal,
+    level: c.level,
+    age: c.age,
+    status: c.status,
+    injuries: c.injuries,
+    createdAt: new Date(),
+  }));
+}
+
 export async function listClients(): Promise<Client[]> {
   const user = await requireUser("entrenador");
+  // Modo demo: sin BD devolvemos un roster de ejemplo en memoria.
+  if (!process.env.DATABASE_URL) return demoRoster(user.id);
   return db.select().from(clients).where(eq(clients.trainerId, user.id)).orderBy(clients.name);
 }
 
