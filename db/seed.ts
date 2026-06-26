@@ -33,7 +33,7 @@ async function main() {
   const [coach] = await db
     .insert(schema.users)
     .values({
-      name: "Diego Sánchez",
+      name: "Juan Camilo Restrepo",
       email: "coach@demo.com",
       passwordHash: hash,
       role: "entrenador",
@@ -47,7 +47,7 @@ async function main() {
   const [clientUser] = await db
     .insert(schema.users)
     .values({
-      name: "Marcos Vidal",
+      name: "Andrés Martínez",
       email: "client@demo.com",
       passwordHash: hash,
       role: "cliente",
