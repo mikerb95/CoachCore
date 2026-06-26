@@ -119,9 +119,19 @@ export default function CoachApp({ user, initialClients }: { user: { name: strin
     </>
   );
 
+  const runQuickAction = (action: typeof QUICK_ACTIONS[number]["action"]) => {
+    if (action === "builder" || action === "roster") go(action);
+    else showToast("Próximamente");
+  };
+
   if (isDesktop) {
+    const quickActions: QuickAction[] = QUICK_ACTIONS.map(({ label, icon, action }) => ({
+      label,
+      icon,
+      onSelect: () => runQuickAction(action),
+    }));
     return (
-      <DesktopFrame nav={COACH_NAV} current={screen} onNavigate={(k) => go(k as Screen)}>
+      <DesktopFrame nav={COACH_NAV} current={screen} onNavigate={(k) => go(k as Screen)} quickActions={quickActions}>
         <Toast msg={toast} />
         <div style={css("padding:24px 0 80px")}>{screens}</div>
       </DesktopFrame>
