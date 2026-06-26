@@ -1,14 +1,17 @@
 import { redirect } from "next/navigation";
 import { auth } from "@/auth";
 import CoachApp from "./CoachApp";
-import { listClients } from "@/app/actions/data";
+import { listClients, listMyRoutines } from "@/app/actions/data";
 
 export default async function CoachPage() {
   const session = await auth();
   if (!session?.user) redirect("/login");
   if (session.user.role !== "entrenador") redirect("/cliente");
 
-  const roster = await listClients();
+  const [roster, initialRoutines] = await Promise.all([
+    listClients(),
+    listMyRoutines(),
+  ]);
 
   return (
     <CoachApp
@@ -23,6 +26,7 @@ export default async function CoachPage() {
         status: c.status,
         injuries: c.injuries,
       }))}
+      initialRoutines={initialRoutines}
     />
   );
 }
