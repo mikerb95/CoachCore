@@ -8,18 +8,9 @@ import {
   MachineIllo,
   type Machine,
   type MachineCategory,
-  type MachineStatus,
 } from "@/lib/machines";
 
 const DATA = "#38E07B";
-const ACTION = "#FF7A1A";
-const MUTED = "#8A938F";
-
-const statusMeta: Record<MachineStatus, { label: string; col: string; bg: string }> = {
-  libre: { label: "Libre", col: DATA, bg: "rgba(56,224,123,.12)" },
-  ocupada: { label: "Ocupada", col: ACTION, bg: "rgba(255,122,26,.12)" },
-  mantenimiento: { label: "Mantenim.", col: MUTED, bg: "rgba(138,147,143,.14)" },
-};
 
 // Deterministic pseudo-random so the demo charts/history stay stable per machine.
 function seeded(n: number) {

@@ -5,7 +5,7 @@ import { css } from "@/lib/css";
 import { PhoneFrame, DesktopFrame, StatusBar, Toast, useIsDesktop, type NavItem } from "@/components/Frame";
 import { AccountActions } from "@/components/AccountActions";
 import { MachineInventory } from "@/components/Machines";
-import { saveCheckin as saveCheckinDB, sendMyMessage } from "@/app/actions/data";
+import { saveCheckin as saveCheckinDB, sendMyMessage, getRoutineWithExercises, type RoutineSummary, type RoutineWithExercises } from "@/app/actions/data";
 
 const DATA = "#38E07B";
 const ACTION = "#FF7A1A";
@@ -43,7 +43,7 @@ const seed = (): Msg[] => [
   { from: "coach", text: "Normal, subimos carga. Hoy cuida la lumbar y avísame cómo va la sentadilla.", time: "8:16" },
 ];
 
-export default function ClientApp({ user }: { user: { name: string; email: string } }) {
+export default function ClientApp({ user, assignedRoutines }: { user: { name: string; email: string }; assignedRoutines: RoutineSummary[] }) {
   const isDesktop = useIsDesktop();
   const [screen, setScreen] = useState<Screen>("home");
   const [weight, setWeight] = useState(78.4);
@@ -62,6 +62,9 @@ export default function ClientApp({ user }: { user: { name: string; email: strin
   const timer = useRef<ReturnType<typeof setInterval> | null>(null);
   const toastTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const savingCheckin = useRef(false);
+  const [logPickerVisible, setLogPickerVisible] = useState(false);
+  const [loadedRoutine, setLoadedRoutine] = useState<RoutineWithExercises | null>(null);
+  const [loadingRoutine, setLoadingRoutine] = useState(false);
 
   useEffect(() => () => {
     if (timer.current) clearInterval(timer.current);
