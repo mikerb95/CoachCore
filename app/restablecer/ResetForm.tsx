@@ -23,7 +23,7 @@ export default function ResetForm({ token }: { token: string }) {
 
       {!token ? (
         <Notice color="#FF6B8A" icon="ph-fill ph-warning-circle">
-          Enlace no válido. Solicita uno nuevo desde <Link href="/recuperar" style={css("color:var(--data);font-weight:600")}>recuperar acceso</Link>.
+          Enlace no válido. Solicita uno nuevo desde <Link href="/recuperar" className="cc-press cc-link" style={css("color:var(--data);font-weight:600")}>recuperar acceso</Link>.
         </Notice>
       ) : done ? (
         <Notice color="var(--data)" icon="ph-fill ph-check-circle">
