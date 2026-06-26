@@ -75,8 +75,17 @@ function cssVars(accent: string): React.CSSProperties {
 /** A single entry in the desktop sidebar. `accent` highlights the primary action. */
 export type NavItem = { key: string; icon: string; label: string; accent?: boolean };
 
+/**
+ * A quick action shown in the accent nav item's pop-up menu, mirroring the
+ * mobile BottomNav "+" sheet. When provided, the accent item opens this menu
+ * instead of navigating directly.
+ */
+export type QuickAction = { label: string; icon: string; onSelect: () => void };
+
 /** Sidebar nav that replaces BottomNav on desktop. */
-function DesktopNav({ nav, current, onNavigate }: { nav: NavItem[]; current: string; onNavigate: (key: string) => void }) {
+function DesktopNav({ nav, current, onNavigate, quickActions }: { nav: NavItem[]; current: string; onNavigate: (key: string) => void; quickActions?: QuickAction[] }) {
+  const [quickOpen, setQuickOpen] = useState(false);
+  const hasQuick = !!quickActions && quickActions.length > 0;
   return (
     <aside style={css("flex:none;width:248px;height:100vh;position:sticky;top:0;background:#0A0E0F;border-right:1px solid rgba(255,255,255,.06);display:flex;flex-direction:column;padding:26px 16px;gap:4px;z-index:20")}>
       <div style={css("display:flex;align-items:center;gap:11px;padding:0 12px 26px")}>
@@ -86,16 +95,41 @@ function DesktopNav({ nav, current, onNavigate }: { nav: NavItem[]; current: str
       {nav.map((item) => {
         const active = item.key === current;
         const accentCol = item.accent ? "var(--action)" : "var(--data)";
+        const isQuickTrigger = !!item.accent && hasQuick;
         return (
-          <button
-            key={item.key}
-            onClick={() => onNavigate(item.key)}
-            className="nav-item"
-            style={{ ...css("display:flex;align-items:center;gap:13px;padding:11px 14px;border-radius:12px;border:none;cursor:pointer;width:100%;text-align:left;transition:background .15s ease"), background: active ? "rgba(255,255,255,.05)" : "transparent" }}
-          >
-            <i className={item.icon} style={{ fontSize: 20, color: active ? accentCol : "#54605A" }} />
-            <span style={{ ...css("font:600 14px 'IBM Plex Sans'"), color: active ? "#E6ECEA" : "#8A938F" }}>{item.label}</span>
-          </button>
+          <div key={item.key} style={css("position:relative")}>
+            <button
+              onClick={() => (isQuickTrigger ? setQuickOpen((v) => !v) : onNavigate(item.key))}
+              className="nav-item"
+              style={{ ...css("display:flex;align-items:center;gap:13px;padding:11px 14px;border-radius:12px;border:none;cursor:pointer;width:100%;text-align:left;transition:background .15s ease"), background: active ? "rgba(255,255,255,.05)" : "transparent" }}
+            >
+              <i className={item.icon} style={{ fontSize: 20, color: active ? accentCol : "#54605A" }} />
+              <span style={{ ...css("font:600 14px 'IBM Plex Sans'"), color: active ? "#E6ECEA" : "#8A938F" }}>{item.label}</span>
+              {isQuickTrigger && (
+                <i className={quickOpen ? "ph-bold ph-caret-up" : "ph-bold ph-caret-down"} style={{ marginLeft: "auto", fontSize: 13, color: "#54605A" }} aria-hidden="true" />
+              )}
+            </button>
+            {isQuickTrigger && quickOpen && (
+              <>
+                <div onClick={() => setQuickOpen(false)} style={css("position:fixed;inset:0;z-index:30")} />
+                <div style={css("position:absolute;top:calc(100% + 6px);left:0;right:0;z-index:40;display:flex;flex-direction:column;gap:4px;background:rgba(24,30,31,.98);border:1px solid rgba(255,255,255,.09);border-radius:14px;padding:8px;box-shadow:0 12px 40px rgba(0,0,0,.55)")}>
+                  {quickActions!.map((qa) => (
+                    <button
+                      key={qa.label}
+                      onClick={() => { setQuickOpen(false); qa.onSelect(); }}
+                      className="nav-item"
+                      style={css("background:none;border:none;border-radius:10px;padding:9px 10px;display:flex;align-items:center;gap:12px;cursor:pointer;text-align:left;width:100%")}
+                    >
+                      <span style={css("width:32px;height:32px;border-radius:9px;background:rgba(255,122,26,.12);display:flex;align-items:center;justify-content:center;flex:none")}>
+                        <i className={qa.icon} style={{ fontSize: 17, color: "var(--action)" }} aria-hidden="true" />
+                      </span>
+                      <span style={css("font:600 13.5px 'IBM Plex Sans';color:#E8EDEA")}>{qa.label}</span>
+                    </button>
+                  ))}
+                </div>
+              </>
+            )}
+          </div>
         );
       })}
     </aside>
