@@ -45,6 +45,13 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         const rl = await rateLimit(`login-authz:${ip}`, 10, 5 * 60_000);
         if (!rl.success) return null;
 
+        // Modo demo: sin BD, validamos contra los usuarios en memoria.
+        if (!process.env.DATABASE_URL) {
+          const demo = DEMO_USERS.find((u) => u.email === email);
+          if (!demo || demo.password !== password) return null;
+          return { id: demo.id, email: demo.email, name: demo.name, role: demo.role };
+        }
+
         const found = await db
           .select()
           .from(users)
