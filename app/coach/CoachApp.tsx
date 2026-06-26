@@ -199,15 +199,15 @@ function Dashboard({ onStart, onMachines }: { onStart: (id: number) => void; onM
     <div style={css("padding:8px 18px 110px;animation:ccUp .45s cubic-bezier(.2,.8,.2,1)")}>
       <div style={css("display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:18px")}>
         <div>
-          <div style={css("font:500 12px 'IBM Plex Sans';color:#6E7A76;letter-spacing:.3px;text-transform:uppercase")}>Martes · 24 Jun</div>
-          <div style={css("font:700 30px 'Space Grotesk';color:#fff;letter-spacing:-.6px;margin-top:2px")}>Hoy</div>
+          <div style={css("font:500 12px 'IBM Plex Sans';color:#6E7A76;letter-spacing:.3px;text-transform:uppercase")}>{headerSub}</div>
+          <div style={css("font:700 30px 'Space Grotesk';color:#fff;letter-spacing:-.6px;margin-top:2px")}>{headerTitle}</div>
         </div>
         <div style={css("width:44px;height:44px;border-radius:14px;background:linear-gradient(135deg,#1d2528,#11171a);display:flex;align-items:center;justify-content:center;font:700 14px 'Space Grotesk';color:var(--data);border:1px solid rgba(255,255,255,.07)")}>CC</div>
       </div>
 
       <div className="cc-scroll" style={css("display:flex;gap:8px;overflow-x:auto;margin:0 -18px 20px;padding:2px 18px")}>
         {days.map((d, i) => (
-          <div key={i} style={{ ...css("flex:none;width:48px;height:62px;border-radius:14px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px"), background: d.bg, border: `1px solid ${d.border}` }}>
+          <div key={i} onClick={() => setSelectedDay(i)} style={{ ...css("flex:none;width:48px;height:62px;border-radius:14px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;cursor:pointer"), background: d.bg, border: `1px solid ${d.border}` }}>
             <span style={{ ...css("font:600 11px 'IBM Plex Sans'"), color: d.sub }}>{d.dow}</span>
             <span style={{ ...css("font:700 17px 'Space Grotesk'"), color: d.fg }}>{d.num}</span>
             <span style={{ ...css("width:5px;height:5px;border-radius:50%"), background: d.dot }} />
