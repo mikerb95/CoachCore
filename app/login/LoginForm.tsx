@@ -35,12 +35,12 @@ export default function LoginForm({ justRegistered }: { justRegistered: boolean 
           </div>
         )}
 
-        <button type="submit" disabled={pending} style={{ ...css("margin-top:6px;height:52px;border:none;border-radius:15px;background:var(--data);color:#06140C;font:700 15px 'IBM Plex Sans';display:flex;align-items:center;justify-content:center;gap:8px;cursor:pointer"), opacity: pending ? 0.6 : 1 }}>
+        <button type="submit" disabled={pending} className="cc-press cc-btn-primary" style={{ ...css("margin-top:6px;height:52px;border:none;border-radius:15px;background:var(--data);color:#06140C;font:700 15px 'IBM Plex Sans';display:flex;align-items:center;justify-content:center;gap:8px;cursor:pointer"), opacity: pending ? 0.6 : 1 }}>
           {pending ? "Entrando…" : "Entrar"}
           {!pending && <i className="ph-bold ph-arrow-right" />}
         </button>
 
-        <Link href="/recuperar" style={css("text-align:center;font:500 12.5px 'IBM Plex Sans';color:#8A938F;margin-top:2px")}>
+        <Link href="/recuperar" className="cc-press cc-link-muted" style={css("text-align:center;font:500 12.5px 'IBM Plex Sans';color:#8A938F;margin-top:2px")}>
           ¿Olvidaste tu contraseña?
         </Link>
       </form>
@@ -48,7 +48,7 @@ export default function LoginForm({ justRegistered }: { justRegistered: boolean 
       <div style={css("flex:1")} />
       <div style={css("text-align:center;font:500 13px 'IBM Plex Sans';color:#8A938F;margin-top:20px")}>
         ¿No tienes cuenta?{" "}
-        <Link href="/register" style={css("color:var(--data);font-weight:600")}>Crear cuenta</Link>
+        <Link href="/register" className="cc-press cc-link" style={css("color:var(--data);font-weight:600")}>Crear cuenta</Link>
       </div>
       <div style={css("text-align:center;font:500 11px 'IBM Plex Sans';color:#465049;margin-top:14px")}>
         Tus datos, tu propiedad · Cifrado en tránsito
