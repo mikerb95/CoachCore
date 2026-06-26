@@ -35,6 +35,8 @@ async function main() {
     .values({
       name: "Camilo Llano",
       email: "coach@demo.com",
+      phone: "3001112233",
+      coachCode: "AA",
       passwordHash: hash,
       role: "entrenador",
       consentHealthData: true,
@@ -49,6 +51,7 @@ async function main() {
     .values({
       name: "Andrés Martínez",
       email: "client@demo.com",
+      phone: "3004445566",
       passwordHash: hash,
       role: "cliente",
       consentHealthData: true,
@@ -85,12 +88,12 @@ async function main() {
 
   // ── 2. Roster del entrenador ──────────────────────────────────────────────
   const demoClients = [
-    { name: "Andrés Martínez",       goal: "Hipertrofia"      as const, level: "Avanzado",     age: 32, status: "Activo"   as const, injuries: "Sin lesiones activas. Molestia lumbar leve resuelta (mar. 2026).", userId: clientRow.id },
-    { name: "Valentina López",        goal: "Pérdida de grasa" as const, level: "Intermedio",   age: 28, status: "Activo"   as const, injuries: "Sin lesiones registradas.", userId: null },
-    { name: "Sebastián Gómez",        goal: "Fuerza"           as const, level: "Avanzado",     age: 35, status: "Descanso" as const, injuries: "Hombro izq. — tendinitis manguito rotador (en seguimiento).", userId: null },
-    { name: "Camila Rodríguez",       goal: "Hipertrofia"      as const, level: "Principiante", age: 24, status: "Activo"   as const, injuries: "Sin lesiones registradas.", userId: null },
-    { name: "Carlos Herrera",         goal: "Rehabilitación"   as const, level: "Intermedio",   age: 41, status: "Activo"   as const, injuries: "Rodilla der. — reconstrucción LCA (feb. 2026). Fase de fortalecimiento.", userId: null },
-    { name: "María Fernanda Ospina",  goal: "Fuerza"           as const, level: "Avanzado",     age: 29, status: "Activo"   as const, injuries: "Sin lesiones registradas.", userId: null },
+    { name: "Andrés Martínez",       goal: "Hipertrofia"      as const, level: "Avanzado",     age: 32, status: "Activo"   as const, injuries: "Sin lesiones activas. Molestia lumbar leve resuelta (mar. 2026).", userId: clientRow.id, code: "AA0001", seq: 1 },
+    { name: "Valentina López",        goal: "Pérdida de grasa" as const, level: "Intermedio",   age: 28, status: "Activo"   as const, injuries: "Sin lesiones registradas.", userId: null, code: "AA0002", seq: 2 },
+    { name: "Sebastián Gómez",        goal: "Fuerza"           as const, level: "Avanzado",     age: 35, status: "Descanso" as const, injuries: "Hombro izq. — tendinitis manguito rotador (en seguimiento).", userId: null, code: "AA0003", seq: 3 },
+    { name: "Camila Rodríguez",       goal: "Hipertrofia"      as const, level: "Principiante", age: 24, status: "Activo"   as const, injuries: "Sin lesiones registradas.", userId: null, code: "AA0004", seq: 4 },
+    { name: "Carlos Herrera",         goal: "Rehabilitación"   as const, level: "Intermedio",   age: 41, status: "Activo"   as const, injuries: "Rodilla der. — reconstrucción LCA (feb. 2026). Fase de fortalecimiento.", userId: null, code: "AA0005", seq: 5 },
+    { name: "María Fernanda Ospina",  goal: "Fuerza"           as const, level: "Avanzado",     age: 29, status: "Activo"   as const, injuries: "Sin lesiones registradas.", userId: null, code: "AA0006", seq: 6 },
   ];
 
   const insertedClients = await db
