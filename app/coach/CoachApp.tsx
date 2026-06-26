@@ -162,7 +162,7 @@ function Dashboard({ onStart, onMachines }: { onStart: (id: number) => void; onM
       border: active ? DATA : "rgba(255,255,255,.05)",
       fg: active ? "#06140C" : "#E6ECEA",
       sub: active ? "rgba(6,20,12,.7)" : "#6E7A76",
-      dot: active ? "#06140C" : past ? MUTED : "transparent",
+      dot: i === TODAY_IDX ? (active ? "#06140C" : MUTED) : "transparent",
     };
   });
   const isToday = selectedDay === TODAY_IDX;
