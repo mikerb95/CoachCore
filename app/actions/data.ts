@@ -4,7 +4,7 @@ import { and, desc, eq, isNotNull, sql } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 import { db } from "@/db";
 import { auth } from "@/auth";
-import { users, clients, checkins, measurements, messages, sessions, sessionSets } from "@/db/schema";
+import { users, clients, checkins, measurements, messages, sessions, sessionSets, routines, routineExercises } from "@/db/schema";
 import type { Client, Message, Session, SessionSet } from "@/db/schema";
 
 async function requireUser(role?: "entrenador" | "cliente") {
@@ -178,6 +178,7 @@ export async function linkClientUser(clientId: string, targetUserId: string): Pr
 
 export async function startSession(input: {
   clientId: string;
+  routineId?: string;
   routineName?: string;
   coachNotes?: string;
 }): Promise<string> {
@@ -187,6 +188,7 @@ export async function startSession(input: {
     .values({
       trainerId: user.role === "entrenador" ? user.id : (await resolveTrainerId(user.id)),
       clientId: input.clientId,
+      routineId: input.routineId ?? null,
       routineName: input.routineName ?? null,
       coachNotes: input.coachNotes ?? null,
       startedAt: new Date(),
@@ -244,6 +246,215 @@ async function resolveTrainerId(userId: string): Promise<string> {
     .limit(1);
   if (!row) throw new Error("Este usuario no está vinculado a ningún roster");
   return row.trainerId;
+}
+
+/* ───────────────────────── Rutinas ───────────────────────── */
+
+export type RoutineSummary = {
+  id: string;
+  name: string;
+  description: string | null;
+  clientId: string | null;
+  exerciseCount: number;
+  createdAt: Date;
+};
+
+export type RoutineExerciseData = {
+  id: string;
+  exerciseName: string;
+  setCount: number;
+  repsTarget: number | null;
+  durationSec: number | null;
+  weightKg: number | null;
+  rpeTarget: number | null;
+  restSec: number | null;
+  orderIndex: number;
+  notes: string | null;
+};
+
+export type RoutineWithExercises = {
+  id: string;
+  name: string;
+  description: string | null;
+  clientId: string | null;
+  exercises: RoutineExerciseData[];
+};
+
+/** Crea una rutina nueva y devuelve su ID. */
+export async function createRoutine(input: {
+  name: string;
+  description?: string;
+  clientId?: string;
+}): Promise<string> {
+  const user = await requireUser("entrenador");
+  if (!process.env.DATABASE_URL) throw new Error("Base de datos no configurada");
+  const [row] = await db
+    .insert(routines)
+    .values({
+      trainerId: user.id,
+      name: input.name.trim(),
+      description: input.description?.trim() || null,
+      clientId: input.clientId || null,
+    })
+    .returning({ id: routines.id });
+  revalidatePath("/coach");
+  revalidatePath("/cliente");
+  return row.id;
+}
+
+/** Reemplaza todos los ejercicios de una rutina (delete + insert). */
+export async function saveRoutineExercises(
+  routineId: string,
+  exercises: {
+    exerciseName: string;
+    setCount: number;
+    repsTarget?: number;
+    durationSec?: number;
+    weightKg?: number;
+    rpeTarget?: number;
+    restSec?: number;
+    orderIndex: number;
+    notes?: string;
+  }[],
+): Promise<void> {
+  const user = await requireUser("entrenador");
+  const [routine] = await db
+    .select({ trainerId: routines.trainerId })
+    .from(routines)
+    .where(and(eq(routines.id, routineId), eq(routines.trainerId, user.id)))
+    .limit(1);
+  if (!routine) throw new Error("No autorizado");
+
+  await db.delete(routineExercises).where(eq(routineExercises.routineId, routineId));
+  if (exercises.length > 0) {
+    await db.insert(routineExercises).values(
+      exercises.map((e) => ({
+        routineId,
+        exerciseName: e.exerciseName,
+        setCount: e.setCount,
+        repsTarget: e.repsTarget ?? null,
+        durationSec: e.durationSec ?? null,
+        weightKg: e.weightKg ?? null,
+        rpeTarget: e.rpeTarget ?? null,
+        restSec: e.restSec ?? 120,
+        orderIndex: e.orderIndex,
+        notes: e.notes ?? null,
+      })),
+    );
+  }
+  revalidatePath("/coach");
+  revalidatePath("/cliente");
+}
+
+/** Rutinas del entrenador logueado (con conteo de ejercicios). */
+export async function listMyRoutines(): Promise<RoutineSummary[]> {
+  const user = await requireUser("entrenador");
+  if (!process.env.DATABASE_URL) return [];
+  const rows = await db
+    .select({
+      id: routines.id,
+      name: routines.name,
+      description: routines.description,
+      clientId: routines.clientId,
+      createdAt: routines.createdAt,
+      exerciseCount: sql<number>`cast(count(${routineExercises.id}) as int)`,
+    })
+    .from(routines)
+    .leftJoin(routineExercises, eq(routineExercises.routineId, routines.id))
+    .where(eq(routines.trainerId, user.id))
+    .groupBy(routines.id)
+    .orderBy(desc(routines.createdAt));
+  return rows;
+}
+
+/** Rutinas asignadas a un cliente específico (llamado por el coach). */
+export async function listClientRoutines(clientId: string): Promise<RoutineSummary[]> {
+  await requireUser("entrenador");
+  if (!process.env.DATABASE_URL) return [];
+  const rows = await db
+    .select({
+      id: routines.id,
+      name: routines.name,
+      description: routines.description,
+      clientId: routines.clientId,
+      createdAt: routines.createdAt,
+      exerciseCount: sql<number>`cast(count(${routineExercises.id}) as int)`,
+    })
+    .from(routines)
+    .leftJoin(routineExercises, eq(routineExercises.routineId, routines.id))
+    .where(eq(routines.clientId, clientId))
+    .groupBy(routines.id)
+    .orderBy(routines.name);
+  return rows;
+}
+
+/** Rutinas asignadas al cliente logueado (llamado desde ClientApp). */
+export async function listMyAssignedRoutines(): Promise<RoutineSummary[]> {
+  const user = await requireUser("cliente");
+  if (!process.env.DATABASE_URL) return [];
+  const [clientRow] = await db
+    .select({ id: clients.id })
+    .from(clients)
+    .where(eq(clients.userId, user.id))
+    .limit(1);
+  if (!clientRow) return [];
+
+  const rows = await db
+    .select({
+      id: routines.id,
+      name: routines.name,
+      description: routines.description,
+      clientId: routines.clientId,
+      createdAt: routines.createdAt,
+      exerciseCount: sql<number>`cast(count(${routineExercises.id}) as int)`,
+    })
+    .from(routines)
+    .leftJoin(routineExercises, eq(routineExercises.routineId, routines.id))
+    .where(eq(routines.clientId, clientRow.id))
+    .groupBy(routines.id)
+    .orderBy(routines.name);
+  return rows;
+}
+
+/** Rutina con todos sus ejercicios ordenados. */
+export async function getRoutineWithExercises(routineId: string): Promise<RoutineWithExercises | null> {
+  await requireUser();
+  if (!process.env.DATABASE_URL) return null;
+  const [routine] = await db.select().from(routines).where(eq(routines.id, routineId)).limit(1);
+  if (!routine) return null;
+
+  const exs = await db
+    .select()
+    .from(routineExercises)
+    .where(eq(routineExercises.routineId, routineId))
+    .orderBy(routineExercises.orderIndex);
+
+  return {
+    id: routine.id,
+    name: routine.name,
+    description: routine.description,
+    clientId: routine.clientId,
+    exercises: exs.map((e) => ({
+      id: e.id,
+      exerciseName: e.exerciseName,
+      setCount: e.setCount,
+      repsTarget: e.repsTarget,
+      durationSec: e.durationSec,
+      weightKg: e.weightKg,
+      rpeTarget: e.rpeTarget,
+      restSec: e.restSec,
+      orderIndex: e.orderIndex,
+      notes: e.notes,
+    })),
+  };
+}
+
+/** Elimina una rutina (los ejercicios se borran en cascada). */
+export async function deleteRoutine(routineId: string): Promise<void> {
+  const user = await requireUser("entrenador");
+  await db.delete(routines).where(and(eq(routines.id, routineId), eq(routines.trainerId, user.id)));
+  revalidatePath("/coach");
+  revalidatePath("/cliente");
 }
 
 /* ───────────────────────── Chat ───────────────────────── */

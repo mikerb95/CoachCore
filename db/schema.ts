@@ -72,6 +72,48 @@ export const clients = pgTable(
   ],
 );
 
+/** Rutinas de entrenamiento creadas por el entrenador. */
+export const routines = pgTable(
+  "routines",
+  {
+    id: uuid("id").defaultRandom().primaryKey(),
+    trainerId: uuid("trainer_id")
+      .notNull()
+      .references(() => users.id, { onDelete: "cascade" }),
+    // null = plantilla sin asignar; con valor = asignada a este cliente
+    clientId: uuid("client_id").references(() => clients.id, { onDelete: "set null" }),
+    name: text("name").notNull(),
+    description: text("description"),
+    createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+    updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
+  },
+  (t) => [
+    index("routines_trainer_idx").on(t.trainerId),
+    index("routines_client_idx").on(t.clientId),
+  ],
+);
+
+/** Ejercicios que componen una rutina, ordenados por orderIndex. */
+export const routineExercises = pgTable(
+  "routine_exercises",
+  {
+    id: uuid("id").defaultRandom().primaryKey(),
+    routineId: uuid("routine_id")
+      .notNull()
+      .references(() => routines.id, { onDelete: "cascade" }),
+    exerciseName: text("exercise_name").notNull(),
+    setCount: integer("set_count").notNull().default(3),
+    repsTarget: integer("reps_target"),   // null → exercise basado en duración
+    durationSec: integer("duration_sec"), // null → exercise basado en reps
+    weightKg: real("weight_kg"),          // null → sin carga / peso corporal
+    rpeTarget: integer("rpe_target"),     // 6-10
+    restSec: integer("rest_sec").default(120),
+    orderIndex: integer("order_index").notNull(),
+    notes: text("notes"),
+  },
+  (t) => [index("routine_exercises_routine_idx").on(t.routineId)],
+);
+
 /** Check-ins diarios que envía el cliente (datos de salud). */
 export const checkins = pgTable(
   "checkins",
@@ -131,7 +173,8 @@ export const sessions = pgTable(
     clientId: uuid("client_id")
       .notNull()
       .references(() => clients.id, { onDelete: "cascade" }),
-    // Nombre del entreno (ej. "Fuerza · Día A"). Libre, sin FK a routines aún.
+    // FK a la rutina usada (null = sesión libre sin rutina asignada)
+    routineId: uuid("routine_id").references(() => routines.id, { onDelete: "set null" }),
     routineName: text("routine_name"),
     scheduledAt: timestamp("scheduled_at", { withTimezone: true }),
     startedAt: timestamp("started_at", { withTimezone: true }),
@@ -190,3 +233,5 @@ export type Session = typeof sessions.$inferSelect;
 export type NewSession = typeof sessions.$inferInsert;
 export type SessionSet = typeof sessionSets.$inferSelect;
 export type NewSessionSet = typeof sessionSets.$inferInsert;
+export type Routine = typeof routines.$inferSelect;
+export type RoutineExercise = typeof routineExercises.$inferSelect;
