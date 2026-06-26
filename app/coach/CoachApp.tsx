@@ -775,7 +775,7 @@ function Settings({ onToast, user }: { onToast: (m: string) => void; user: { nam
       <AccountActions name={user.name} email={user.email} />
 
       <div style={css("text-align:center;font:500 11px 'JetBrains Mono';color:#465049;line-height:1.7;margin-top:22px")}>
-        CoachCore v1.0<br />Cifrado · RGPD · Datos en tu Postgres
+        CoachCore v1.0<br />Cifrado · Ley 1581 · Datos en tu Postgres
       </div>
     </div>
   );

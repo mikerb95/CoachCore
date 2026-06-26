@@ -35,7 +35,7 @@ export default async function HomePage() {
             </div>
 
             <div style={css("text-align:center;font:500 11px 'IBM Plex Sans';color:#465049;margin-top:18px")}>
-              Sin suscripciones · Cifrado · RGPD
+              Sin suscripciones · Cifrado · Ley 1581
             </div>
           </div>
     </ScreenShell>

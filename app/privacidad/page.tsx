@@ -17,49 +17,50 @@ export default function PrivacidadPage() {
           </div>
 
           <div className="cc-scroll" style={css("flex:1;overflow-y:auto;padding:18px")}>
-            <p style={css("font:500 11px 'JetBrains Mono';color:#5E6A66;margin:0 0 16px")}>Versión {PRIVACY_VERSION} · RGPD (UE) 2016/679</p>
+            <p style={css("font:500 11px 'JetBrains Mono';color:#5E6A66;margin:0 0 16px")}>Versión {PRIVACY_VERSION} · Ley 1581 de 2012 · Decreto 1377 de 2013</p>
 
             <Section title="1. Responsable del tratamiento">
               El entrenador titular de la cuenta es el responsable del tratamiento de los datos de sus
-              clientes. CoachCore actúa como herramienta de soporte. Indica aquí tu razón social y un
-              email de contacto de privacidad antes de operar comercialmente.
+              clientes ante la Superintendencia de Industria y Comercio (SIC). Indica tu nombre o razón
+              social y un correo de contacto de privacidad antes de operar comercialmente.
             </Section>
 
-            <Section title="2. Qué datos tratamos">
-              Datos de cuenta (nombre, email, contraseña cifrada) y <b style={css("color:#C6CFCB")}>datos de
-              salud</b> (lesiones, peso corporal, % graso, medidas, RPE). Los datos de salud son
-              «categoría especial» (art. 9 RGPD) y solo se tratan con tu consentimiento explícito.
+            <Section title="2. Datos que tratamos">
+              Datos de cuenta (nombre, correo, contraseña cifrada) y <b style={css("color:#C6CFCB")}>datos
+              sensibles de salud</b> (lesiones, peso corporal, % de grasa, medidas, RPE). Los datos
+              sensibles solo se tratan con tu autorización expresa (art. 6 Ley 1581 de 2012).
             </Section>
 
-            <Section title="3. Base jurídica">
-              Ejecución del servicio de entrenamiento (art. 6.1.b) y tu consentimiento explícito para los
-              datos de salud (art. 9.2.a). Puedes retirar el consentimiento en cualquier momento.
+            <Section title="3. Finalidad y autorización">
+              Los datos se usan exclusivamente para prestar el servicio de entrenamiento personalizado.
+              Tu autorización es la base del tratamiento (art. 4 Ley 1581). Puedes revocarla en
+              cualquier momento eliminando tu cuenta desde Ajustes.
             </Section>
 
             <Section title="4. Conservación">
-              Conservamos tus datos mientras la cuenta esté activa. Al eliminar la cuenta, los datos se
-              borran de forma permanente de la base de datos.
+              Conservamos tus datos mientras la cuenta esté activa. Al eliminarla, todos los datos se
+              suprimen de forma permanente e irreversible de la base de datos.
             </Section>
 
-            <Section title="5. Tus derechos">
-              Acceso, rectificación, supresión, oposición, limitación y portabilidad. Desde Ajustes puedes
-              <b style={css("color:#C6CFCB")}> exportar</b> todos tus datos (portabilidad) y
-              <b style={css("color:#C6CFCB")}> eliminar tu cuenta</b> (supresión) tú mismo.
+            <Section title="5. Tus derechos (Habeas Data)">
+              Conocer, actualizar, rectificar y suprimir tus datos (art. 8 Ley 1581 de 2012). Desde
+              Ajustes puedes <b style={css("color:#C6CFCB")}>exportar</b> todos tus datos y
+              <b style={css("color:#C6CFCB")}> eliminar tu cuenta</b> directamente, sin trámites.
             </Section>
 
             <Section title="6. Seguridad">
               Contraseñas con hash bcrypt, cifrado en tránsito (HTTPS/HSTS), cabeceras de seguridad
-              estrictas (CSP), control de acceso por rol y validación de entrada en servidor.
+              estrictas (CSP), control de acceso por rol y validación de datos en servidor.
             </Section>
 
-            <Section title="7. Encargados / terceros">
-              La base de datos se aloja en Neon (Postgres) y el hosting en Vercel, como encargados del
-              tratamiento. No vendemos datos ni los cedemos con fines publicitarios.
+            <Section title="7. Operadores / terceros">
+              La base de datos se aloja en Neon (Postgres) y el hosting en Vercel, como operadores del
+              tratamiento. No vendemos datos ni los compartimos con fines publicitarios.
             </Section>
 
             <p style={css("font:500 12px 'IBM Plex Sans';color:#5E6A66;line-height:1.6;margin-top:8px")}>
-              Este texto es una base de cumplimiento; revísalo con asesoría legal antes de operar con
-              clientes reales.
+              Este texto es una base de cumplimiento con la legislación colombiana; revísalo con
+              asesoría legal antes de operar con clientes reales.
             </p>
           </div>
     </ScreenShell>
