@@ -1,6 +1,5 @@
 import { redirect } from "next/navigation";
 import { auth } from "@/auth";
-import { css } from "@/lib/css";
 import { ScreenShell, StatusBar } from "@/components/Frame";
 import RecoverForm from "./RecoverForm";
 
