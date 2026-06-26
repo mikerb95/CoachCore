@@ -65,7 +65,7 @@ export default function RegisterForm() {
 
 function RoleCard({ active, onClick, icon, label, color }: { active: boolean; onClick: () => void; icon: string; label: string; color: string }) {
   return (
-    <button type="button" onClick={onClick} style={{ ...css("flex:1;display:flex;flex-direction:column;align-items:center;gap:7px;border-radius:14px;padding:14px 8px;cursor:pointer;background:#12181A;transition:border-color .2s"), border: `1px solid ${active ? color : "rgba(255,255,255,.07)"}` }}>
+    <button type="button" onClick={onClick} className={active ? undefined : "cc-press cc-role"} style={{ ...css("flex:1;display:flex;flex-direction:column;align-items:center;gap:7px;border-radius:14px;padding:14px 8px;cursor:pointer;background:#12181A;transition:border-color .2s,background .2s"), border: `1px solid ${active ? color : "rgba(255,255,255,.07)"}` }}>
       <i className={icon} style={{ fontSize: 22, color: active ? color : "#6E7A76" }} />
       <span style={{ ...css("font:600 13px 'IBM Plex Sans'"), color: active ? "#fff" : "#8A938F" }}>{label}</span>
     </button>
