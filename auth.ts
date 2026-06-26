@@ -14,6 +14,16 @@ import { rateLimit } from "./lib/rateLimit";
 // usuario real (mismo coste 12) y no se pueda enumerar emails por timing.
 const DUMMY_HASH = bcrypt.hashSync("cc-timing-safety-decoy-" + Math.random().toString(36).slice(2), 12);
 
+// ── Modo demo (sin BD) ──────────────────────────────────────────────────────
+// Si no hay DATABASE_URL, el login valida contra estos usuarios en memoria para
+// poder enseñar la app sin base de datos. En cuanto se configure DATABASE_URL,
+// este bloque se ignora y se usa la autenticación real contra la BD.
+// ⚠️ Quitar (o dejar como está, sólo se activa sin BD) antes de producción real.
+const DEMO_USERS = [
+  { id: "demo-coach", email: "coach@demo.com", name: "Diego Sánchez", role: "entrenador", password: "Demo1234!" },
+  { id: "demo-client", email: "client@demo.com", name: "Marcos Vidal", role: "cliente", password: "Demo1234!" },
+] as const;
+
 export const { handlers, auth, signIn, signOut } = NextAuth({
   ...authConfig,
   providers: [

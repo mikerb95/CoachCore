@@ -7,6 +7,7 @@ import { resetPassword, type ResetState } from "@/app/actions/password";
 
 export default function ResetForm({ token }: { token: string }) {
   const [state, action, pending] = useActionState<ResetState, FormData>(resetPassword, {});
+  const [reveal, setReveal] = useState(false);
   const done = !!state.ok;
 
   return (
