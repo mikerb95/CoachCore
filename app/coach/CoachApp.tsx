@@ -137,7 +137,7 @@ export default function CoachApp({ user, initialClients }: { user: { name: strin
         {screens}
       </div>
 
-      {screen !== "live" && <BottomNav screen={screen} go={go} />}
+      {screen !== "live" && <BottomNav screen={screen} go={go} onToast={showToast} />}
     </PhoneFrame>
   );
 }
@@ -799,31 +799,76 @@ function Settings({ onToast, user }: { onToast: (m: string) => void; user: { nam
 }
 
 /* ============================ BOTTOM NAV ============================ */
-function BottomNav({ screen, go }: { screen: Screen; go: (s: Screen) => void }) {
+const QUICK_ACTIONS = [
+  { label: "Registrar rutina", icon: "ph-fill ph-clipboard-text", action: "log" as const },
+  { label: "Crear rutina",     icon: "ph-fill ph-barbell",         action: "builder" as const },
+  { label: "Crear alumno",     icon: "ph-fill ph-user-plus",       action: "roster" as const },
+  { label: "Plan de nutrición",icon: "ph-fill ph-fork-knife",      action: "nutrition" as const },
+];
+
+function BottomNav({ screen, go, onToast }: { screen: Screen; go: (s: Screen) => void; onToast?: (msg: string) => void }) {
+  const [open, setOpen] = useState(false);
   const col = (s: Screen) => (screen === s ? DATA : "#54605A");
+
+  const handleAction = (action: typeof QUICK_ACTIONS[number]["action"]) => {
+    setOpen(false);
+    if (action === "builder" || action === "roster") {
+      go(action);
+    } else {
+      onToast?.("Próximamente");
+    }
+  };
+
   return (
-    <div style={css("flex:none;height:78px;background:rgba(10,14,15,.92);border-top:1px solid rgba(255,255,255,.06);backdrop-filter:blur(12px);display:flex;align-items:center;justify-content:space-around;padding:0 8px 14px")}>
-      <button onClick={() => go("dashboard")} style={css("background:none;border:none;display:flex;flex-direction:column;align-items:center;gap:4px;cursor:pointer;flex:1")}>
-        <i className="ph-fill ph-house" style={{ fontSize: 22, color: col("dashboard") }} />
-        <span style={{ ...css("font:600 9.5px 'IBM Plex Sans'"), color: col("dashboard") }}>Hoy</span>
-      </button>
-      <button onClick={() => go("roster")} style={css("background:none;border:none;display:flex;flex-direction:column;align-items:center;gap:4px;cursor:pointer;flex:1")}>
-        <i className="ph-fill ph-users-three" style={{ fontSize: 22, color: col("roster") }} />
-        <span style={{ ...css("font:600 9.5px 'IBM Plex Sans'"), color: col("roster") }}>Clientes</span>
-      </button>
-      <button onClick={() => go("builder")} aria-label="Crear rutina" style={css("background:none;border:none;display:flex;flex-direction:column;align-items:center;gap:5px;cursor:pointer;flex:1")}>
-        <span style={css("width:44px;height:34px;border-radius:12px;background:var(--action);display:flex;align-items:center;justify-content:center;box-shadow:0 6px 18px rgba(255,122,26,.35)")}>
-          <i className="ph-bold ph-plus" style={css("font-size:20px;color:#1a0c00")} aria-hidden="true" />
-        </span>
-      </button>
-      <button onClick={() => go("analytics")} style={css("background:none;border:none;display:flex;flex-direction:column;align-items:center;gap:4px;cursor:pointer;flex:1")}>
-        <i className="ph-fill ph-chart-line-up" style={{ fontSize: 22, color: col("analytics") }} />
-        <span style={{ ...css("font:600 9.5px 'IBM Plex Sans'"), color: col("analytics") }}>Progreso</span>
-      </button>
-      <button onClick={() => go("settings")} style={css("background:none;border:none;display:flex;flex-direction:column;align-items:center;gap:4px;cursor:pointer;flex:1")}>
-        <i className="ph-fill ph-gear-six" style={{ fontSize: 22, color: col("settings") }} />
-        <span style={{ ...css("font:600 9.5px 'IBM Plex Sans'"), color: col("settings") }}>Ajustes</span>
-      </button>
-    </div>
+    <>
+      {open && (
+        <div
+          onClick={() => setOpen(false)}
+          style={css("position:fixed;inset:0;z-index:99;background:rgba(0,0,0,.45);backdrop-filter:blur(2px)")}
+        />
+      )}
+
+      {open && (
+        <div style={css("position:fixed;bottom:90px;left:16px;right:16px;z-index:100;display:flex;flex-direction:column;gap:10px")}>
+          {QUICK_ACTIONS.map(({ label, icon, action }) => (
+            <button
+              key={action}
+              onClick={() => handleAction(action)}
+              style={css("background:rgba(24,30,31,.97);border:1px solid rgba(255,255,255,.09);border-radius:16px;padding:14px 18px;display:flex;align-items:center;gap:14px;cursor:pointer;text-align:left;box-shadow:0 8px 32px rgba(0,0,0,.5)")}
+            >
+              <span style={css("width:38px;height:38px;border-radius:10px;background:rgba(255,122,26,.12);display:flex;align-items:center;justify-content:center;flex:none")}>
+                <i className={icon} style={{ fontSize: 20, color: ACTION }} />
+              </span>
+              <span style={css("font:600 15px 'IBM Plex Sans';color:#E8EDEA")}>{label}</span>
+              <i className="ph ph-caret-right" style={{ fontSize: 14, color: MUTED, marginLeft: "auto" }} />
+            </button>
+          ))}
+        </div>
+      )}
+
+      <div style={css("flex:none;height:78px;background:rgba(10,14,15,.92);border-top:1px solid rgba(255,255,255,.06);backdrop-filter:blur(12px);display:flex;align-items:center;justify-content:space-around;padding:0 8px 14px;position:relative;z-index:100")}>
+        <button onClick={() => { setOpen(false); go("dashboard"); }} style={css("background:none;border:none;display:flex;flex-direction:column;align-items:center;gap:4px;cursor:pointer;flex:1")}>
+          <i className="ph-fill ph-house" style={{ fontSize: 22, color: col("dashboard") }} />
+          <span style={{ ...css("font:600 9.5px 'IBM Plex Sans'"), color: col("dashboard") }}>Hoy</span>
+        </button>
+        <button onClick={() => { setOpen(false); go("roster"); }} style={css("background:none;border:none;display:flex;flex-direction:column;align-items:center;gap:4px;cursor:pointer;flex:1")}>
+          <i className="ph-fill ph-users-three" style={{ fontSize: 22, color: col("roster") }} />
+          <span style={{ ...css("font:600 9.5px 'IBM Plex Sans'"), color: col("roster") }}>Clientes</span>
+        </button>
+        <button onClick={() => setOpen((v) => !v)} aria-label="Crear" style={css("background:none;border:none;display:flex;flex-direction:column;align-items:center;gap:5px;cursor:pointer;flex:1")}>
+          <span style={css(`width:44px;height:34px;border-radius:12px;background:var(--action);display:flex;align-items:center;justify-content:center;box-shadow:0 6px 18px rgba(255,122,26,.35);transition:transform .15s`)}>
+            <i className={open ? "ph-bold ph-x" : "ph-bold ph-plus"} style={css("font-size:20px;color:#1a0c00")} aria-hidden="true" />
+          </span>
+        </button>
+        <button onClick={() => { setOpen(false); go("analytics"); }} style={css("background:none;border:none;display:flex;flex-direction:column;align-items:center;gap:4px;cursor:pointer;flex:1")}>
+          <i className="ph-fill ph-chart-line-up" style={{ fontSize: 22, color: col("analytics") }} />
+          <span style={{ ...css("font:600 9.5px 'IBM Plex Sans'"), color: col("analytics") }}>Progreso</span>
+        </button>
+        <button onClick={() => { setOpen(false); go("settings"); }} style={css("background:none;border:none;display:flex;flex-direction:column;align-items:center;gap:4px;cursor:pointer;flex:1")}>
+          <i className="ph-fill ph-gear-six" style={{ fontSize: 22, color: col("settings") }} />
+          <span style={{ ...css("font:600 9.5px 'IBM Plex Sans'"), color: col("settings") }}>Ajustes</span>
+        </button>
+      </div>
+    </>
   );
 }
