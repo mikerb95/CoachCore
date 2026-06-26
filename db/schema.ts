@@ -44,6 +44,8 @@ export const clients = pgTable(
     trainerId: uuid("trainer_id")
       .notNull()
       .references(() => users.id, { onDelete: "cascade" }),
+    // Cuenta de usuario del cliente (null hasta que el cliente se registra y el coach vincula la cuenta).
+    userId: uuid("user_id").references(() => users.id, { onDelete: "set null" }),
     name: text("name").notNull(),
     goal: goalEnum("goal").notNull().default("Hipertrofia"),
     level: text("level").notNull().default("Principiante"),
@@ -52,7 +54,10 @@ export const clients = pgTable(
     injuries: text("injuries").notNull().default(""),
     createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
   },
-  (t) => [index("clients_trainer_idx").on(t.trainerId)],
+  (t) => [
+    index("clients_trainer_idx").on(t.trainerId),
+    index("clients_user_idx").on(t.userId),
+  ],
 );
 
 /** Check-ins diarios que envía el cliente (datos de salud). */
