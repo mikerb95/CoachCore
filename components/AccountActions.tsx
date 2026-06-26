@@ -38,7 +38,7 @@ export function AccountActions({ name, email }: { name: string; email: string })
 
       <div style={css("display:flex;flex-direction:column;gap:9px")}>
         <button onClick={doExport} disabled={pending} style={css("height:48px;border:1px solid rgba(255,255,255,.08);border-radius:13px;background:#12181A;color:#E6ECEA;font:600 13.5px 'IBM Plex Sans';display:flex;align-items:center;justify-content:center;gap:8px;cursor:pointer")}>
-          <i className="ph ph-download-simple" style={css("color:var(--data);font-size:18px")} />Exportar mis datos (RGPD)
+          <i className="ph ph-download-simple" style={css("color:var(--data);font-size:18px")} />Exportar mis datos (Ley 1581)
         </button>
 
         <Link href="/privacidad" style={css("height:48px;border:1px solid rgba(255,255,255,.08);border-radius:13px;background:#12181A;color:#E6ECEA;font:600 13.5px 'IBM Plex Sans';display:flex;align-items:center;justify-content:center;gap:8px")}>
