@@ -28,6 +28,7 @@ export default function RegisterForm() {
 
         <Field icon="ph ph-user" name="name" type="text" placeholder="Nombre y apellidos" autoComplete="name" error={fe.name} label="Nombre y apellidos" />
         <Field icon="ph ph-envelope-simple" name="email" type="email" placeholder="tu@email.com" autoComplete="email" error={fe.email} label="Correo electrónico" />
+        <Field icon="ph ph-device-mobile" name="phone" type="tel" placeholder="Número de móvil (para iniciar sesión)" autoComplete="tel" inputMode="tel" error={fe.phone} label="Número de móvil" />
         <Field icon="ph ph-lock-simple" name="password" type="password" placeholder="Contraseña (mín. 10)" autoComplete="new-password" error={fe.password} label="Contraseña" />
 
         {/* Autorización Ley 1581 */}
@@ -72,14 +73,14 @@ function RoleCard({ active, onClick, icon, label, color }: { active: boolean; on
   );
 }
 
-function Field({ icon, name, type, placeholder, autoComplete, error, label }: { icon: string; name: string; type: string; placeholder: string; autoComplete?: string; error?: string; label: string }) {
+function Field({ icon, name, type, placeholder, autoComplete, inputMode, error, label }: { icon: string; name: string; type: string; placeholder: string; autoComplete?: string; inputMode?: "tel" | "email" | "text" | "numeric"; error?: string; label: string }) {
   const [reveal, setReveal] = useState(false);
   const isPassword = type === "password";
   return (
     <div>
       <div style={{ ...css("display:flex;align-items:center;gap:10px;background:#12181A;border-radius:14px;padding:0 14px;height:52px"), border: `1px solid ${error ? "rgba(255,107,138,.5)" : "rgba(255,255,255,.07)"}` }}>
         <i className={icon} style={css("color:#6E7A76;font-size:18px")} aria-hidden="true" />
-        <input name={name} type={isPassword && reveal ? "text" : type} placeholder={placeholder} autoComplete={autoComplete} aria-label={label} aria-invalid={!!error} required style={css("flex:1;background:none;border:none;outline:none;color:#fff;font:500 14px 'IBM Plex Sans'")} />
+        <input name={name} type={isPassword && reveal ? "text" : type} placeholder={placeholder} autoComplete={autoComplete} inputMode={inputMode} aria-label={label} aria-invalid={!!error} required style={css("flex:1;background:none;border:none;outline:none;color:#fff;font:500 14px 'IBM Plex Sans'")} />
         {isPassword && <PasswordToggle reveal={reveal} onToggle={() => setReveal((v) => !v)} />}
       </div>
       {error && <div style={css("font:500 11.5px 'IBM Plex Sans';color:#FF6B8A;margin:5px 0 0 4px")}>{error}</div>}

@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { Space_Grotesk, IBM_Plex_Sans, JetBrains_Mono } from "next/font/google";
+import { ServiceWorkerRegistrar } from "@/components/ServiceWorkerRegistrar";
 import "./globals.css";
 
 const spaceGrotesk = Space_Grotesk({
@@ -24,6 +25,9 @@ export const metadata: Metadata = {
     "App PWA para entrenadores personales. Tus datos, tu propiedad. Sin suscripciones, 100% offline.",
   manifest: "/manifest.webmanifest",
   appleWebApp: { capable: true, statusBarStyle: "black-translucent", title: "CoachCore" },
+  icons: {
+    apple: "/apple-touch-icon.png",
+  },
 };
 
 export const viewport: Viewport = {
@@ -43,6 +47,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <link rel="stylesheet" href="/phosphor/bold/style.css" />
       </head>
       <body className={`${spaceGrotesk.variable} ${ibmPlex.variable} ${jetbrains.variable}`}>
+        <ServiceWorkerRegistrar />
         {children}
       </body>
     </html>

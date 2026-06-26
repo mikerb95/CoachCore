@@ -2,6 +2,14 @@ import { z } from "zod";
 
 export const emailSchema = z.string().trim().toLowerCase().email("Email no válido").max(254);
 
+// Móvil: normalizamos quitando espacios, guiones y paréntesis; admitimos un "+"
+// inicial opcional (prefijo internacional). El resultado es el identificador de login.
+export const phoneSchema = z
+  .string()
+  .trim()
+  .transform((s) => s.replace(/[\s().-]/g, ""))
+  .pipe(z.string().regex(/^\+?\d{7,15}$/, "Número de móvil no válido"));
+
 // Política de contraseñas: mínimo 10, mezcla básica. Se valida en cliente y servidor.
 export const passwordSchema = z
   .string()
@@ -16,6 +24,7 @@ export const roleSchema = z.enum(["entrenador", "cliente"]);
 export const registerSchema = z.object({
   name: z.string().trim().min(2, "Nombre demasiado corto").max(80),
   email: emailSchema,
+  phone: phoneSchema,
   password: passwordSchema,
   role: roleSchema,
   consentHealthData: z
@@ -24,7 +33,7 @@ export const registerSchema = z.object({
 });
 
 export const loginSchema = z.object({
-  email: emailSchema,
+  phone: phoneSchema,
   password: z.string().min(1, "Introduce tu contraseña").max(200),
 });
 

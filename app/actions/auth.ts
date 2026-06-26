@@ -17,14 +17,14 @@ export type LoginState = { error?: string };
 
 export async function loginAction(_prev: LoginState, formData: FormData): Promise<LoginState> {
   const parsed = loginSchema.safeParse({
-    email: formData.get("email"),
+    phone: formData.get("phone"),
     password: formData.get("password"),
   });
-  if (!parsed.success) return { error: "Email o contraseña no válidos" };
+  if (!parsed.success) return { error: "Móvil o contraseña no válidos" };
 
-  // Límite de intentos por IP + email para frenar fuerza bruta.
+  // Límite de intentos por IP + móvil para frenar fuerza bruta.
   const ip = (await headers()).get("x-forwarded-for")?.split(",")[0]?.trim() ?? "unknown";
-  const rl = await rateLimit(`login:${ip}:${parsed.data.email}`, 5, 5 * 60_000);
+  const rl = await rateLimit(`login:${ip}:${parsed.data.phone}`, 5, 5 * 60_000);
   if (!rl.success) {
     return { error: `Demasiados intentos. Inténtalo de nuevo en ${rl.retryAfter}s.` };
   }
@@ -34,7 +34,7 @@ export async function loginAction(_prev: LoginState, formData: FormData): Promis
     await signIn("credentials", { ...parsed.data, redirectTo: "/" });
   } catch (e) {
     if (e instanceof AuthError) {
-      return { error: "Email o contraseña incorrectos" };
+      return { error: "Móvil o contraseña incorrectos" };
     }
     throw e; // re-lanza el NEXT_REDIRECT de éxito
   }
@@ -48,6 +48,7 @@ export async function registerAction(
   const parsed = registerSchema.safeParse({
     name: formData.get("name"),
     email: formData.get("email"),
+    phone: formData.get("phone"),
     password: formData.get("password"),
     role: formData.get("role"),
     consentHealthData: formData.get("consentHealthData") === "on",
@@ -62,13 +63,18 @@ export async function registerAction(
     return { error: "Revisa los datos del formulario", fieldErrors };
   }
 
-  const { name, email, password, role } = parsed.data;
+  const { name, email, phone, password, role } = parsed.data;
 
-  const existing = await db.select({ id: users.id }).from(users).where(eq(users.email, email)).limit(1);
-  if (existing.length > 0) {
+  const existingEmail = await db.select({ id: users.id }).from(users).where(eq(users.email, email)).limit(1);
+  if (existingEmail.length > 0) {
     // No revelamos explícitamente que el email existe en el flujo público,
     // pero en registro es aceptable indicarlo para usabilidad.
     return { error: "Ese email ya está registrado", fieldErrors: { email: "Ya existe una cuenta" } };
+  }
+
+  const existingPhone = await db.select({ id: users.id }).from(users).where(eq(users.phone, phone)).limit(1);
+  if (existingPhone.length > 0) {
+    return { error: "Ese móvil ya está registrado", fieldErrors: { phone: "Ya existe una cuenta" } };
   }
 
   const passwordHash = await bcrypt.hash(password, 12);
@@ -76,6 +82,7 @@ export async function registerAction(
   await db.insert(users).values({
     name,
     email,
+    phone,
     passwordHash,
     role,
     consentHealthData: true,

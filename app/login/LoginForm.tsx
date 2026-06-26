@@ -26,7 +26,7 @@ export default function LoginForm({ justRegistered }: { justRegistered: boolean 
       )}
 
       <form action={action} style={css("display:flex;flex-direction:column;gap:12px;margin-top:24px")}>
-        <Field icon="ph ph-envelope-simple" name="email" type="email" placeholder="tu@email.com" autoComplete="email" label="Correo electrónico" />
+        <Field icon="ph ph-device-mobile" name="phone" type="tel" placeholder="Número de móvil" autoComplete="tel" inputMode="tel" label="Número de móvil" />
         <Field icon="ph ph-lock-simple" name="password" type="password" placeholder="Contraseña" autoComplete="current-password" label="Contraseña" />
 
         {state.error && (
@@ -62,10 +62,11 @@ function validationMessage(input: HTMLInputElement): string {
   const v = input.validity;
   if (v.valueMissing) return "Por favor, completa este campo.";
   if (v.typeMismatch && input.type === "email") return "Ingresa un correo electrónico válido.";
+  if (input.type === "tel") return "Ingresa un número de móvil válido.";
   return "Revisa este campo.";
 }
 
-function Field({ icon, name, type, placeholder, autoComplete, label }: { icon: string; name: string; type: string; placeholder: string; autoComplete?: string; label: string }) {
+function Field({ icon, name, type, placeholder, autoComplete, inputMode, label }: { icon: string; name: string; type: string; placeholder: string; autoComplete?: string; inputMode?: "tel" | "email" | "text" | "numeric"; label: string }) {
   const [reveal, setReveal] = useState(false);
   const [error, setError] = useState("");
   const isPassword = type === "password";
@@ -78,6 +79,7 @@ function Field({ icon, name, type, placeholder, autoComplete, label }: { icon: s
           type={isPassword && reveal ? "text" : type}
           placeholder={placeholder}
           autoComplete={autoComplete}
+          inputMode={inputMode}
           aria-label={label}
           aria-invalid={error ? true : undefined}
           required

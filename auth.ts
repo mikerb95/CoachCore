@@ -20,8 +20,8 @@ const DUMMY_HASH = bcrypt.hashSync("cc-timing-safety-decoy-" + Math.random().toS
 // este bloque se ignora y se usa la autenticación real contra la BD.
 // ⚠️ Quitar (o dejar como está, sólo se activa sin BD) antes de producción real.
 const DEMO_USERS = [
-  { id: "demo-coach", email: "coach@demo.com", name: "Diego Sánchez", role: "entrenador", password: "Demo1234!" },
-  { id: "demo-client", email: "client@demo.com", name: "Marcos Vidal", role: "cliente", password: "Demo1234!" },
+  { id: "demo-coach", email: "coach@demo.com", phone: "3001112233", name: "Diego Sánchez", role: "entrenador", password: "Demo1234!" },
+  { id: "demo-client", email: "client@demo.com", phone: "3004445566", name: "Marcos Vidal", role: "cliente", password: "Demo1234!" },
 ] as const;
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
@@ -29,14 +29,14 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
   providers: [
     Credentials({
       credentials: {
-        email: { label: "Email", type: "email" },
+        phone: { label: "Móvil", type: "tel" },
         password: { label: "Contraseña", type: "password" },
       },
       async authorize(raw) {
         // Validación estricta de entrada.
         const parsed = loginSchema.safeParse(raw);
         if (!parsed.success) return null;
-        const { email, password } = parsed.data;
+        const { phone, password } = parsed.data;
 
         // Rate limit en el ÚNICO punto por el que pasan todos los intentos
         // (incluido el POST directo a /api/auth/callback/credentials, que se
@@ -48,7 +48,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         // Modo demo: los usuarios demo SIEMPRE pueden entrar (haya o no BD), para
         // poder enseñar la app aunque falten variables de entorno. Se comprueba
         // antes que la BD; el resto de credenciales siguen el flujo normal.
-        const demo = DEMO_USERS.find((u) => u.email === email);
+        const demo = DEMO_USERS.find((u) => u.phone === phone);
         if (demo) {
           if (demo.password !== password) return null;
           return { id: demo.id, email: demo.email, name: demo.name, role: demo.role };
@@ -60,7 +60,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         const found = await db
           .select()
           .from(users)
-          .where(eq(users.email, email))
+          .where(eq(users.phone, phone))
           .limit(1);
         const user = found[0];
 

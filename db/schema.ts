@@ -9,6 +9,9 @@ export const roleEnum = pgEnum("role", ["entrenador", "cliente"]);
 export const users = pgTable("users", {
   id: uuid("id").defaultRandom().primaryKey(),
   email: text("email").notNull().unique(),
+  // Número de móvil normalizado (solo dígitos, opcional +). Es el identificador
+  // de inicio de sesión. Único; nullable solo por compatibilidad de migración.
+  phone: text("phone").unique(),
   // bcrypt hash — never the plaintext password
   passwordHash: text("password_hash").notNull(),
   name: text("name").notNull(),
