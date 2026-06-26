@@ -13,6 +13,9 @@ export const users = pgTable("users", {
   passwordHash: text("password_hash").notNull(),
   name: text("name").notNull(),
   role: roleEnum("role").notNull().default("cliente"),
+  // Código de 2 letras del entrenador (AA…ZZ). Se asigna al crear su primer
+  // cliente y forma el prefijo del ID público de cada cliente (p.ej. AA0001).
+  coachCode: text("coach_code").unique(),
 
   // ── RGPD / consent trail ────────────────────────────────────────────
   // Consentimiento explícito para tratar datos de salud (categoría especial).
@@ -46,6 +49,11 @@ export const clients = pgTable(
       .references(() => users.id, { onDelete: "cascade" }),
     // Cuenta de usuario del cliente (null hasta que el cliente se registra y el coach vincula la cuenta).
     userId: uuid("user_id").references(() => users.id, { onDelete: "set null" }),
+    // ID público del cliente: 2 letras del entrenador + 4 dígitos consecutivos
+    // (p.ej. AA0001). Único en toda la app. `seq` guarda el consecutivo dentro
+    // del entrenador para calcular el siguiente de forma fiable.
+    code: text("code").unique(),
+    seq: integer("seq"),
     name: text("name").notNull(),
     goal: goalEnum("goal").notNull().default("Hipertrofia"),
     level: text("level").notNull().default("Principiante"),
@@ -57,6 +65,7 @@ export const clients = pgTable(
   (t) => [
     index("clients_trainer_idx").on(t.trainerId),
     index("clients_user_idx").on(t.userId),
+    index("clients_code_idx").on(t.code),
   ],
 );
 
