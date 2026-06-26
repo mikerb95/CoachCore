@@ -57,22 +57,45 @@ export default function LoginForm({ justRegistered }: { justRegistered: boolean 
   );
 }
 
+/** Spanish (Colombia) validation copy that replaces the browser's English bubble. */
+function validationMessage(input: HTMLInputElement): string {
+  const v = input.validity;
+  if (v.valueMissing) return "Por favor, completa este campo.";
+  if (v.typeMismatch && input.type === "email") return "Ingresa un correo electrónico válido.";
+  return "Revisa este campo.";
+}
+
 function Field({ icon, name, type, placeholder, autoComplete, label }: { icon: string; name: string; type: string; placeholder: string; autoComplete?: string; label: string }) {
   const [reveal, setReveal] = useState(false);
+  const [error, setError] = useState("");
   const isPassword = type === "password";
   return (
-    <div style={css("display:flex;align-items:center;gap:10px;background:#12181A;border:1px solid rgba(255,255,255,.07);border-radius:14px;padding:0 14px;height:52px")}>
-      <i className={icon} style={css("color:#6E7A76;font-size:18px")} aria-hidden="true" />
-      <input
-        name={name}
-        type={isPassword && reveal ? "text" : type}
-        placeholder={placeholder}
-        autoComplete={autoComplete}
-        aria-label={label}
-        required
-        style={css("flex:1;background:none;border:none;outline:none;color:#fff;font:500 14px 'IBM Plex Sans'")}
-      />
-      {isPassword && <PasswordToggle reveal={reveal} onToggle={() => setReveal((v) => !v)} />}
+    <div>
+      <div style={css(`display:flex;align-items:center;gap:10px;background:#12181A;border:1px solid ${error ? "rgba(255,107,138,.5)" : "rgba(255,255,255,.07)"};border-radius:14px;padding:0 14px;height:52px`)}>
+        <i className={icon} style={css(`color:${error ? "#FF6B8A" : "#6E7A76"};font-size:18px`)} aria-hidden="true" />
+        <input
+          name={name}
+          type={isPassword && reveal ? "text" : type}
+          placeholder={placeholder}
+          autoComplete={autoComplete}
+          aria-label={label}
+          aria-invalid={error ? true : undefined}
+          required
+          onInvalid={(e) => {
+            e.preventDefault();
+            setError(validationMessage(e.currentTarget));
+          }}
+          onInput={() => error && setError("")}
+          style={css("flex:1;background:none;border:none;outline:none;color:#fff;font:500 14px 'IBM Plex Sans'")}
+        />
+        {isPassword && <PasswordToggle reveal={reveal} onToggle={() => setReveal((v) => !v)} />}
+      </div>
+      {error && (
+        <div role="alert" style={css("display:flex;align-items:center;gap:6px;margin-top:7px;padding-left:2px;font:500 12px 'IBM Plex Sans';color:#FF6B8A;animation:ccUp14 .25s cubic-bezier(.2,.8,.2,1)")}>
+          <i className="ph-fill ph-warning-circle" style={css("font-size:14px")} aria-hidden="true" />
+          {error}
+        </div>
+      )}
     </div>
   );
 }
