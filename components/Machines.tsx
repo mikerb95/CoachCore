@@ -128,7 +128,6 @@ function MachineSheet({
   onClose: () => void;
   historyFor?: (machineId: string) => HistoryEntry[];
 }) {
-  const st = statusMeta[machine.status];
   const bars = weeklyBars(machine.uses30d);
   const provided = historyFor?.(machine.id);
   // Real machineId-linked entries when available; otherwise the sample log.
