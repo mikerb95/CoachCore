@@ -3,6 +3,7 @@
 import { useActionState, useState } from "react";
 import Link from "next/link";
 import { css } from "@/lib/css";
+import PasswordToggle from "@/components/PasswordToggle";
 import { registerAction, type RegisterState } from "@/app/actions/auth";
 
 export default function RegisterForm() {
@@ -79,11 +80,7 @@ function Field({ icon, name, type, placeholder, autoComplete, error, label }: { 
       <div style={{ ...css("display:flex;align-items:center;gap:10px;background:#12181A;border-radius:14px;padding:0 14px;height:52px"), border: `1px solid ${error ? "rgba(255,107,138,.5)" : "rgba(255,255,255,.07)"}` }}>
         <i className={icon} style={css("color:#6E7A76;font-size:18px")} aria-hidden="true" />
         <input name={name} type={isPassword && reveal ? "text" : type} placeholder={placeholder} autoComplete={autoComplete} aria-label={label} aria-invalid={!!error} required style={css("flex:1;background:none;border:none;outline:none;color:#fff;font:500 14px 'IBM Plex Sans'")} />
-        {isPassword && (
-          <button type="button" onClick={() => setReveal((v) => !v)} aria-label={reveal ? "Ocultar contraseña" : "Mostrar contraseña"} aria-pressed={reveal} style={css("flex:none;display:flex;align-items:center;justify-content:center;background:none;border:none;padding:0;cursor:pointer;color:#6E7A76")}>
-            <i className={reveal ? "ph ph-eye-slash" : "ph ph-eye"} style={css("font-size:18px")} aria-hidden="true" />
-          </button>
-        )}
+        {isPassword && <PasswordToggle reveal={reveal} onToggle={() => setReveal((v) => !v)} />}
       </div>
       {error && <div style={css("font:500 11.5px 'IBM Plex Sans';color:#FF6B8A;margin:5px 0 0 4px")}>{error}</div>}
     </div>
