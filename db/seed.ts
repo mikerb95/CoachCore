@@ -85,12 +85,12 @@ async function main() {
 
   // ── 2. Roster del entrenador ──────────────────────────────────────────────
   const demoClients = [
-    { name: "Marcos Vidal",   goal: "Hipertrofia"      as const, level: "Avanzado",     age: 32, status: "Activo"   as const, injuries: "Sin lesiones activas. Molestia lumbar leve resuelta (mar. 2026).", userId: clientRow.id },
-    { name: "Laura Pérez",    goal: "Pérdida de grasa" as const, level: "Intermedio",   age: 28, status: "Activo"   as const, injuries: "Sin lesiones registradas.", userId: null },
-    { name: "Diego Sánchez",  goal: "Fuerza"           as const, level: "Avanzado",     age: 35, status: "Descanso" as const, injuries: "Hombro izq. — tendinitis manguito rotador (en seguimiento).", userId: null },
-    { name: "Ana Torres",     goal: "Hipertrofia"      as const, level: "Principiante", age: 24, status: "Activo"   as const, injuries: "Sin lesiones registradas.", userId: null },
-    { name: "Javier Ruiz",    goal: "Rehabilitación"   as const, level: "Intermedio",   age: 41, status: "Activo"   as const, injuries: "Rodilla der. — reconstrucción LCA (feb. 2026). Fase de fortalecimiento.", userId: null },
-    { name: "Sofía Gómez",   goal: "Fuerza"           as const, level: "Avanzado",     age: 29, status: "Activo"   as const, injuries: "Sin lesiones registradas.", userId: null },
+    { name: "Andrés Martínez",       goal: "Hipertrofia"      as const, level: "Avanzado",     age: 32, status: "Activo"   as const, injuries: "Sin lesiones activas. Molestia lumbar leve resuelta (mar. 2026).", userId: clientRow.id },
+    { name: "Valentina López",        goal: "Pérdida de grasa" as const, level: "Intermedio",   age: 28, status: "Activo"   as const, injuries: "Sin lesiones registradas.", userId: null },
+    { name: "Sebastián Gómez",        goal: "Fuerza"           as const, level: "Avanzado",     age: 35, status: "Descanso" as const, injuries: "Hombro izq. — tendinitis manguito rotador (en seguimiento).", userId: null },
+    { name: "Camila Rodríguez",       goal: "Hipertrofia"      as const, level: "Principiante", age: 24, status: "Activo"   as const, injuries: "Sin lesiones registradas.", userId: null },
+    { name: "Carlos Herrera",         goal: "Rehabilitación"   as const, level: "Intermedio",   age: 41, status: "Activo"   as const, injuries: "Rodilla der. — reconstrucción LCA (feb. 2026). Fase de fortalecimiento.", userId: null },
+    { name: "María Fernanda Ospina",  goal: "Fuerza"           as const, level: "Avanzado",     age: 29, status: "Activo"   as const, injuries: "Sin lesiones registradas.", userId: null },
   ];
 
   const insertedClients = await db

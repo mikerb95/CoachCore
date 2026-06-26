@@ -20,12 +20,12 @@ async function requireUser(role?: "entrenador" | "cliente") {
 // /coach reviente al consultar la BD cuando solo está el login en memoria.
 function demoRoster(trainerId: string): Client[] {
   const base = [
-    { name: "Marcos Vidal", goal: "Hipertrofia", level: "Avanzado", age: 32, status: "Activo", injuries: "Sin lesiones activas. Molestia lumbar leve resuelta (mar. 2026)." },
-    { name: "Laura Pérez", goal: "Pérdida de grasa", level: "Intermedio", age: 28, status: "Activo", injuries: "Sin lesiones registradas." },
-    { name: "Diego Sánchez", goal: "Fuerza", level: "Avanzado", age: 35, status: "Descanso", injuries: "Hombro izq. — tendinitis manguito rotador (en seguimiento)." },
-    { name: "Ana Torres", goal: "Hipertrofia", level: "Principiante", age: 24, status: "Activo", injuries: "Sin lesiones registradas." },
-    { name: "Javier Ruiz", goal: "Rehabilitación", level: "Intermedio", age: 41, status: "Activo", injuries: "Rodilla der. — reconstrucción LCA (feb. 2026). Fase de fortalecimiento." },
-    { name: "Sofía Gómez", goal: "Fuerza", level: "Avanzado", age: 29, status: "Activo", injuries: "Sin lesiones registradas." },
+    { name: "Andrés Martínez", goal: "Hipertrofia", level: "Avanzado", age: 32, status: "Activo", injuries: "Sin lesiones activas. Molestia lumbar leve resuelta (mar. 2026)." },
+    { name: "Valentina López", goal: "Pérdida de grasa", level: "Intermedio", age: 28, status: "Activo", injuries: "Sin lesiones registradas." },
+    { name: "Sebastián Gómez", goal: "Fuerza", level: "Avanzado", age: 35, status: "Descanso", injuries: "Hombro izq. — tendinitis manguito rotador (en seguimiento)." },
+    { name: "Camila Rodríguez", goal: "Hipertrofia", level: "Principiante", age: 24, status: "Activo", injuries: "Sin lesiones registradas." },
+    { name: "Carlos Herrera", goal: "Rehabilitación", level: "Intermedio", age: 41, status: "Activo", injuries: "Rodilla der. — reconstrucción LCA (feb. 2026). Fase de fortalecimiento." },
+    { name: "María Fernanda Ospina", goal: "Fuerza", level: "Avanzado", age: 29, status: "Activo", injuries: "Sin lesiones registradas." },
   ] as const;
   return base.map((c, i) => ({
     id: `demo-client-${i}`,
