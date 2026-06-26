@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { css } from "@/lib/css";
-import { StatusBar } from "@/components/Frame";
+import { ScreenShell, StatusBar } from "@/components/Frame";
 import { PRIVACY_VERSION } from "@/lib/constants";
 
 export const metadata = { title: "Política de Privacidad · CoachCore" };
