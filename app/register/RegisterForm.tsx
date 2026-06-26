@@ -50,14 +50,14 @@ export default function RegisterForm() {
           </div>
         )}
 
-        <button type="submit" disabled={pending} style={{ ...css("margin-top:4px;height:52px;border:none;border-radius:15px;background:var(--data);color:#06140C;font:700 15px 'IBM Plex Sans';display:flex;align-items:center;justify-content:center;gap:8px;cursor:pointer"), opacity: pending ? 0.6 : 1 }}>
+        <button type="submit" disabled={pending} className="cc-press cc-btn-primary" style={{ ...css("margin-top:4px;height:52px;border:none;border-radius:15px;background:var(--data);color:#06140C;font:700 15px 'IBM Plex Sans';display:flex;align-items:center;justify-content:center;gap:8px;cursor:pointer"), opacity: pending ? 0.6 : 1 }}>
           {pending ? "Creando…" : "Crear cuenta"}
         </button>
       </form>
 
       <div style={css("text-align:center;font:500 13px 'IBM Plex Sans';color:#8A938F;margin-top:18px")}>
         ¿Ya tienes cuenta?{" "}
-        <Link href="/login" style={css("color:var(--data);font-weight:600")}>Iniciar sesión</Link>
+        <Link href="/login" className="cc-press cc-link" style={css("color:var(--data);font-weight:600")}>Iniciar sesión</Link>
       </div>
     </div>
   );
