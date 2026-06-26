@@ -171,7 +171,7 @@ export default function ClientApp({ user }: { user: { name: string; email: strin
         )}
         {screen === "celebrate" && (
           <Celebrate
-            onShare={() => { showToast("Resumen enviado a Diego"); setScreen("coach"); }}
+            onShare={() => { showToast("Resumen enviado a Camilo"); setScreen("coach"); }}
             onHome={() => setScreen("home")}
           />
         )}
@@ -222,7 +222,7 @@ function Home({
         <div style={css("display:flex;justify-content:space-between;align-items:flex-start")}>
           <div>
             <div style={css("font:500 12px 'IBM Plex Sans';color:#7FA890;text-transform:uppercase;letter-spacing:.4px")}>Martes, 24 jun</div>
-            <div style={css("font:700 26px 'Space Grotesk';color:#fff;letter-spacing:-.5px;margin-top:3px")}>¡Buenas, Marcos!</div>
+            <div style={css("font:700 26px 'Space Grotesk';color:#fff;letter-spacing:-.5px;margin-top:3px")}>¡Buenas, Andrés!</div>
             <div style={css("font:500 13.5px 'IBM Plex Sans';color:#9FB0A8;margin-top:3px")}>Hoy toca pierna. Vamos a por ese PR.</div>
           </div>
           <div style={css("width:46px;height:46px;border-radius:14px;background:linear-gradient(135deg,#1f3d2a,#16291d);display:flex;align-items:center;justify-content:center;font:700 15px 'Space Grotesk';color:var(--data);border:1px solid rgba(255,255,255,.08)")}>MV</div>
