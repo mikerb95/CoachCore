@@ -34,3 +34,26 @@ input { font-family: inherit; }
 .role-card { transition: border-color .2s ease, background .2s ease; }
 .role-card.green:hover { border-color: rgba(56,224,123,.5) !important; background: #14201A !important; }
 .role-card.orange:hover { border-color: rgba(255,122,26,.5) !important; background: #1A1612 !important; }
+
+/* interactive hover affordances (auth screens) */
+@media (hover: hover) {
+  .cc-press { transition: transform .15s ease, filter .2s ease, background .2s ease, color .2s ease, border-color .2s ease; }
+
+  /* primary green button / link */
+  .cc-btn-primary:hover { filter: brightness(1.07); transform: translateY(-1px); }
+  .cc-btn-primary:active { transform: translateY(0); filter: brightness(.96); }
+
+  /* secondary (dark) button / link */
+  .cc-btn-secondary:hover { background: #161D20 !important; border-color: rgba(255,255,255,.18) !important; }
+  .cc-btn-secondary:active { transform: translateY(0); }
+
+  /* text links */
+  .cc-link:hover { color: #5CEB97 !important; text-decoration: underline; }
+  .cc-link-muted:hover { color: #B7C0BC !important; }
+
+  /* password show/hide toggle */
+  .cc-toggle:hover { color: #C6CFCB !important; }
+
+  /* register role selector cards */
+  .cc-role:hover { background: #161D20 !important; border-color: rgba(255,255,255,.18) !important; }
+}
