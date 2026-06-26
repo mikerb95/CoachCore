@@ -38,8 +38,6 @@ export default async function HomePage() {
               Sin suscripciones · Cifrado · RGPD
             </div>
           </div>
-        </div>
-      </div>
-    </div>
+    </ScreenShell>
   );
 }
