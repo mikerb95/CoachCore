@@ -142,17 +142,18 @@ function DesktopNav({ nav, current, onNavigate, quickActions }: { nav: NavItem[]
  * components as PhoneFrame, so the mobile path is untouched.
  */
 export function DesktopFrame({
-  children, nav, current, onNavigate, accent,
+  children, nav, current, onNavigate, accent, quickActions,
 }: {
   children: ReactNode;
   nav: NavItem[];
   current: string;
   onNavigate: (key: string) => void;
   accent?: string;
+  quickActions?: QuickAction[];
 }) {
   return (
     <div style={{ ...css("min-height:100vh;background:radial-gradient(120% 90% at 50% 0%,#0E1416 0%,#060809 60%);display:flex;font-family:'IBM Plex Sans',system-ui,sans-serif"), ...(accent ? cssVars(accent) : {}) }}>
-      <DesktopNav nav={nav} current={current} onNavigate={onNavigate} />
+      <DesktopNav nav={nav} current={current} onNavigate={onNavigate} quickActions={quickActions} />
       <main className="cc-scroll" style={css("flex:1;height:100vh;overflow-y:auto;display:flex;justify-content:center;background:#0A0E0F;position:relative")}>
         <div style={css("width:100%;max-width:880px;padding:0 32px")}>
           {children}

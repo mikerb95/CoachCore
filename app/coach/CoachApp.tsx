@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { css } from "@/lib/css";
-import { PhoneFrame, DesktopFrame, StatusBar, Toast, useIsDesktop, type NavItem } from "@/components/Frame";
+import { PhoneFrame, DesktopFrame, StatusBar, Toast, useIsDesktop, type NavItem, type QuickAction } from "@/components/Frame";
 import { AccountActions } from "@/components/AccountActions";
 import { MachineInventory } from "@/components/Machines";
 import { machines, MachineIllo } from "@/lib/machines";
