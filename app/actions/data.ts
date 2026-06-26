@@ -87,12 +87,12 @@ export async function seedDemoClients(): Promise<void> {
   if (existing.length > 0) return;
 
   await db.insert(clients).values([
-    { trainerId: user.id, name: "Marcos Vidal", goal: "Hipertrofia", level: "Avanzado", age: 32, status: "Activo", injuries: "Sin lesiones activas. Molestia lumbar leve resuelta (mar. 2026)." },
-    { trainerId: user.id, name: "Laura Pérez", goal: "Pérdida de grasa", level: "Intermedio", age: 28, status: "Activo", injuries: "Sin lesiones registradas." },
-    { trainerId: user.id, name: "Diego Sánchez", goal: "Fuerza", level: "Avanzado", age: 35, status: "Descanso", injuries: "Hombro izq. — tendinitis manguito rotador (en seguimiento)." },
-    { trainerId: user.id, name: "Ana Torres", goal: "Hipertrofia", level: "Principiante", age: 24, status: "Activo", injuries: "Sin lesiones registradas." },
-    { trainerId: user.id, name: "Javier Ruiz", goal: "Rehabilitación", level: "Intermedio", age: 41, status: "Activo", injuries: "Rodilla der. — reconstrucción LCA (feb. 2026). Fase de fortalecimiento." },
-    { trainerId: user.id, name: "Sofía Gómez", goal: "Fuerza", level: "Avanzado", age: 29, status: "Activo", injuries: "Sin lesiones registradas." },
+    { trainerId: user.id, name: "Andrés Martínez", goal: "Hipertrofia", level: "Avanzado", age: 32, status: "Activo", injuries: "Sin lesiones activas. Molestia lumbar leve resuelta (mar. 2026)." },
+    { trainerId: user.id, name: "Valentina López", goal: "Pérdida de grasa", level: "Intermedio", age: 28, status: "Activo", injuries: "Sin lesiones registradas." },
+    { trainerId: user.id, name: "Sebastián Gómez", goal: "Fuerza", level: "Avanzado", age: 35, status: "Descanso", injuries: "Hombro izq. — tendinitis manguito rotador (en seguimiento)." },
+    { trainerId: user.id, name: "Camila Rodríguez", goal: "Hipertrofia", level: "Principiante", age: 24, status: "Activo", injuries: "Sin lesiones registradas." },
+    { trainerId: user.id, name: "Carlos Herrera", goal: "Rehabilitación", level: "Intermedio", age: 41, status: "Activo", injuries: "Rodilla der. — reconstrucción LCA (feb. 2026). Fase de fortalecimiento." },
+    { trainerId: user.id, name: "María Fernanda Ospina", goal: "Fuerza", level: "Avanzado", age: 29, status: "Activo", injuries: "Sin lesiones registradas." },
   ]);
   revalidatePath("/coach");
 }
