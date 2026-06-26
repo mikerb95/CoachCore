@@ -35,7 +35,7 @@ export default function RegisterForm() {
           <input type="checkbox" name="consentHealthData" style={css("margin-top:2px;width:18px;height:18px;accent-color:#38E07B;flex:none")} />
           <span style={css("font:500 12px 'IBM Plex Sans';color:#9FB0A8;line-height:1.5")}>
             Acepto el tratamiento de mis <b style={css("color:#C6CFCB")}>datos de salud</b> (lesiones, peso, medidas) para el servicio de entrenamiento, según la{" "}
-            <Link href="/privacidad" style={css("color:var(--data);font-weight:600")}>Política de Privacidad</Link>.
+            <Link href="/privacidad" className="cc-press cc-link" style={css("color:var(--data);font-weight:600")}>Política de Privacidad</Link>.
           </span>
         </label>
         {fe.consentHealthData && (
