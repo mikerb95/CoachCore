@@ -243,7 +243,7 @@ function Home({
       <div style={css("background:#12181A;border:1px solid rgba(255,255,255,.06);border-radius:20px;padding:16px;margin-bottom:14px")}>
         <div style={css("display:flex;align-items:center;justify-content:space-between;margin-bottom:4px")}>
           <span style={css("font:600 11px 'JetBrains Mono';color:var(--data);letter-spacing:.5px")}>TU ENTRENO DE HOY</span>
-          <span style={css("font:500 11px 'IBM Plex Sans';color:#6E7A76")}>Asignado por Diego</span>
+          <span style={css("font:500 11px 'IBM Plex Sans';color:#6E7A76")}>Asignado por Camilo</span>
         </div>
         <div style={css("font:700 21px 'Space Grotesk';color:#fff;letter-spacing:-.3px")}>Fuerza · Día A</div>
         <div style={css("display:flex;gap:14px;margin:11px 0 15px;font:500 12.5px 'IBM Plex Sans';color:#8A938F")}>
@@ -259,7 +259,7 @@ function Home({
       <div style={css("background:#171116;border:1px solid rgba(255,122,26,.18);border-radius:16px;padding:14px;margin-bottom:14px;display:flex;gap:11px")}>
         <i className="ph-fill ph-chat-teardrop-text" style={css("color:var(--action);font-size:20px;flex:none")} />
         <div>
-          <div style={css("font:600 12px 'IBM Plex Sans';color:#E6ECEA;margin-bottom:3px")}>Nota de Diego</div>
+          <div style={css("font:600 12px 'IBM Plex Sans';color:#E6ECEA;margin-bottom:3px")}>Nota de Camilo</div>
           <div style={css("font:500 13px 'IBM Plex Sans';color:#C9B3A4;line-height:1.5")}>&quot;Cuida la postura lumbar hoy. Si la 1ª serie de sentadilla sale fácil, sube 2.5 kg.&quot;</div>
         </div>
       </div>
@@ -568,7 +568,7 @@ function Coach({ messages, draft, setDraft, send }: { messages: Msg[]; draft: st
       <div style={css("padding:6px 18px 14px;border-bottom:1px solid rgba(255,255,255,.05);display:flex;align-items:center;gap:12px;flex:none")}>
         <div style={css("width:46px;height:46px;border-radius:14px;background:linear-gradient(135deg,#23303d,#19232d);display:flex;align-items:center;justify-content:center;font:700 15px 'Space Grotesk';color:#5AA9FF")}>DS</div>
         <div style={css("flex:1")}>
-          <div style={css("font:700 16px 'Space Grotesk';color:#fff")}>Diego Sánchez</div>
+          <div style={css("font:700 16px 'Space Grotesk';color:#fff")}>Camilo Llano</div>
           <div style={css("font:500 11.5px 'IBM Plex Sans';color:var(--data);display:flex;align-items:center;gap:5px")}>
             <span style={css("width:6px;height:6px;border-radius:50%;background:var(--data)")} />Tu entrenador · en línea
           </div>
