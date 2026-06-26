@@ -595,7 +595,7 @@ function Coach({ messages, draft, setDraft, send }: { messages: Msg[]; draft: st
             value={draft}
             onChange={(e) => setDraft(e.target.value)}
             onKeyDown={(e) => { if (e.key === "Enter") send(); }}
-            placeholder="Escribe a Diego…"
+            placeholder="Escribe a Camilo…"
             style={css("flex:1;background:none;border:none;outline:none;color:#fff;font:500 13.5px 'IBM Plex Sans'")}
           />
         </div>
@@ -620,7 +620,7 @@ function Celebrate({ onShare, onHome }: { onShare: () => void; onHome: () => voi
           <i className="ph-fill ph-trophy" style={css("font-size:46px;color:var(--data)")} />
         </div>
         <div style={css("font:600 12px 'JetBrains Mono';color:var(--data);letter-spacing:1px")}>ENTRENO COMPLETADO</div>
-        <div style={css("font:700 28px 'Space Grotesk';color:#fff;letter-spacing:-.5px;margin-top:6px")}>¡Bien hecho, Marcos!</div>
+        <div style={css("font:700 28px 'Space Grotesk';color:#fff;letter-spacing:-.5px;margin-top:6px")}>¡Bien hecho, Andrés!</div>
         <div style={css("font:500 13.5px 'IBM Plex Sans';color:#9FB0A8;margin-top:7px;line-height:1.5;max-width:280px")}>
           Fuerza · Día A · 62 min. Tu racha sube a <b style={css("color:#fff")}>13 días</b> 🔥
         </div>
@@ -652,7 +652,7 @@ function Celebrate({ onShare, onHome }: { onShare: () => void; onHome: () => voi
       <div style={css("flex:1")} />
       <div style={css("display:flex;flex-direction:column;gap:10px;margin-top:20px")}>
         <button onClick={onShare} style={css("width:100%;height:52px;border:none;border-radius:15px;background:var(--data);color:#06140C;font:700 15px 'IBM Plex Sans';display:flex;align-items:center;justify-content:center;gap:8px;cursor:pointer")}>
-          <i className="ph-fill ph-paper-plane-tilt" />Enviar resumen a Diego
+          <i className="ph-fill ph-paper-plane-tilt" />Enviar resumen a Camilo
         </button>
         <button onClick={onHome} style={css("width:100%;height:48px;border:1px solid rgba(255,255,255,.1);border-radius:14px;background:none;color:#C6CFCB;font:600 14px 'IBM Plex Sans';cursor:pointer")}>Volver al inicio</button>
       </div>
