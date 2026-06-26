@@ -247,11 +247,18 @@ function Dashboard({ onStart, onMachines }: { onStart: (id: number) => void; onM
       </div>
 
       <div style={css("display:flex;align-items:center;justify-content:space-between;margin-bottom:12px")}>
-        <div style={css("font:600 16px 'Space Grotesk';color:#E6ECEA")}>Sesiones de hoy</div>
-        <div style={css("font:600 12px 'IBM Plex Sans';color:#6E7A76;background:#12181A;padding:3px 9px;border-radius:20px")}>5 agendadas</div>
+        <div style={css("font:600 16px 'Space Grotesk';color:#E6ECEA")}>{isToday ? "Sesiones de hoy" : `Sesiones del ${DAY_FULL[selectedDay].toLowerCase()}`}</div>
+        {isToday && <div style={css("font:600 12px 'IBM Plex Sans';color:#6E7A76;background:#12181A;padding:3px 9px;border-radius:20px")}>5 agendadas</div>}
       </div>
 
-      {sessions.map((se, i) => (
+      {!isToday && (
+        <div style={css("display:flex;flex-direction:column;align-items:center;justify-content:center;padding:40px 0;gap:10px")}>
+          <i className="ph ph-calendar-blank" style={css("font-size:40px;color:#2A3338")} />
+          <div style={css("font:500 14px 'IBM Plex Sans';color:#4A554F;text-align:center")}>No hay sesiones agendadas para este día</div>
+        </div>
+      )}
+
+      {isToday && sessions.map((se, i) => (
         <div key={i} style={{ ...css("border-radius:18px;padding:13px;display:flex;align-items:center;gap:12px;margin-bottom:10px"), background: se.cardBg, border: `1px solid ${se.cardBorder}` }}>
           <div style={css("width:46px;text-align:center;flex:none")}>
             <div style={{ ...css("font:700 15px 'Space Grotesk';line-height:1"), color: se.timeCol }}>{se.time}</div>
