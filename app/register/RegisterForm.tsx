@@ -30,12 +30,12 @@ export default function RegisterForm() {
         <Field icon="ph ph-envelope-simple" name="email" type="email" placeholder="tu@email.com" autoComplete="email" error={fe.email} label="Correo electrónico" />
         <Field icon="ph ph-lock-simple" name="password" type="password" placeholder="Contraseña (mín. 10)" autoComplete="new-password" error={fe.password} label="Contraseña" />
 
-        {/* RGPD consent */}
+        {/* Autorización Ley 1581 */}
         <label style={css("display:flex;gap:10px;align-items:flex-start;background:#0F1517;border:1px solid rgba(255,255,255,.06);border-radius:14px;padding:13px;cursor:pointer")}>
           <input type="checkbox" name="consentHealthData" style={css("margin-top:2px;width:18px;height:18px;accent-color:#38E07B;flex:none")} />
           <span style={css("font:500 12px 'IBM Plex Sans';color:#9FB0A8;line-height:1.5")}>
-            Acepto el tratamiento de mis <b style={css("color:#C6CFCB")}>datos de salud</b> (lesiones, peso, medidas) para el servicio de entrenamiento, según la{" "}
-            <Link href="/privacidad" className="cc-press cc-link" style={css("color:var(--data);font-weight:600")}>Política de Privacidad</Link>.
+            Autorizo el tratamiento de mis <b style={css("color:#C6CFCB")}>datos sensibles de salud</b> (lesiones, peso, medidas) para el servicio de entrenamiento, conforme a la{" "}
+            <Link href="/privacidad" className="cc-press cc-link" style={css("color:var(--data);font-weight:600")}>Política de Privacidad</Link> y la Ley 1581 de 2012.
           </span>
         </label>
         {fe.consentHealthData && (
