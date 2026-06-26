@@ -35,9 +35,7 @@ export default function ResetForm({ token }: { token: string }) {
           <div style={{ ...css("display:flex;align-items:center;gap:10px;background:#12181A;border-radius:14px;padding:0 14px;height:52px"), border: `1px solid ${state.fieldErrors?.password ? "rgba(255,107,138,.5)" : "rgba(255,255,255,.07)"}` }}>
             <i className="ph ph-lock-simple" style={css("color:#6E7A76;font-size:18px")} />
             <input name="password" type={reveal ? "text" : "password"} placeholder="Nueva contraseña" autoComplete="new-password" required style={css("flex:1;background:none;border:none;outline:none;color:#fff;font:500 14px 'IBM Plex Sans'")} />
-            <button type="button" onClick={() => setReveal((v) => !v)} aria-label={reveal ? "Ocultar contraseña" : "Mostrar contraseña"} aria-pressed={reveal} style={css("flex:none;display:flex;align-items:center;justify-content:center;background:none;border:none;padding:0;cursor:pointer;color:#6E7A76")}>
-              <i className={reveal ? "ph ph-eye-slash" : "ph ph-eye"} style={css("font-size:18px")} aria-hidden="true" />
-            </button>
+            <PasswordToggle reveal={reveal} onToggle={() => setReveal((v) => !v)} />
           </div>
           {state.fieldErrors?.password && (
             <div style={css("font:500 12px 'IBM Plex Sans';color:#FF6B8A;margin-left:4px")}>{state.fieldErrors.password}</div>
