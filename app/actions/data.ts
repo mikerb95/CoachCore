@@ -4,8 +4,8 @@ import { and, desc, eq } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 import { db } from "@/db";
 import { auth } from "@/auth";
-import { clients, checkins, measurements, messages } from "@/db/schema";
-import type { Client, Message } from "@/db/schema";
+import { clients, checkins, measurements, messages, sessions, sessionSets } from "@/db/schema";
+import type { Client, Message, Session, SessionSet } from "@/db/schema";
 
 async function requireUser(role?: "entrenador" | "cliente") {
   const session = await auth();
@@ -94,6 +94,90 @@ export async function saveCheckin(input: {
     unit: "kg",
   });
   revalidatePath("/cliente");
+}
+
+/* ───────────────────────── Coach: link client account ───────────────────────── */
+
+/** Vincula la cuenta de usuario del cliente (userId) a su entrada en el roster. */
+export async function linkClientUser(clientId: string, targetUserId: string): Promise<void> {
+  const user = await requireUser("entrenador");
+  await db
+    .update(clients)
+    .set({ userId: targetUserId })
+    .where(and(eq(clients.id, clientId), eq(clients.trainerId, user.id)));
+  revalidatePath("/coach");
+}
+
+/* ───────────────────────── Sessions ───────────────────────── */
+
+export async function startSession(input: {
+  clientId: string;
+  routineName?: string;
+  coachNotes?: string;
+}): Promise<string> {
+  const user = await requireUser();
+  const [row] = await db
+    .insert(sessions)
+    .values({
+      trainerId: user.role === "entrenador" ? user.id : (await resolveTrainerId(user.id)),
+      clientId: input.clientId,
+      routineName: input.routineName ?? null,
+      coachNotes: input.coachNotes ?? null,
+      startedAt: new Date(),
+    })
+    .returning({ id: sessions.id });
+  return row.id;
+}
+
+export async function completeSession(sessionId: string, durationMin: number): Promise<void> {
+  await requireUser();
+  await db
+    .update(sessions)
+    .set({ completedAt: new Date(), durationMin })
+    .where(eq(sessions.id, sessionId));
+  revalidatePath("/cliente");
+  revalidatePath("/coach");
+}
+
+export async function saveSessionSets(
+  sessionId: string,
+  sets: { exerciseName: string; setNumber: number; weightKg?: number; reps?: number; durationSec?: number; rpe?: number }[],
+): Promise<void> {
+  await requireUser();
+  if (sets.length === 0) return;
+  await db.insert(sessionSets).values(
+    sets.map((s) => ({ sessionId, ...s })),
+  );
+}
+
+export async function listClientSessions(clientId: string): Promise<Session[]> {
+  const user = await requireUser("entrenador");
+  return db
+    .select()
+    .from(sessions)
+    .where(and(eq(sessions.clientId, clientId), eq(sessions.trainerId, user.id)))
+    .orderBy(desc(sessions.startedAt))
+    .limit(50);
+}
+
+export async function listMySessionSets(sessionId: string): Promise<SessionSet[]> {
+  await requireUser();
+  return db
+    .select()
+    .from(sessionSets)
+    .where(eq(sessionSets.sessionId, sessionId))
+    .orderBy(sessionSets.exerciseName, sessionSets.setNumber);
+}
+
+/** Resuelve el trainerId a partir del userId del cliente (busca en el roster). */
+async function resolveTrainerId(userId: string): Promise<string> {
+  const [row] = await db
+    .select({ trainerId: clients.trainerId })
+    .from(clients)
+    .where(eq(clients.userId, userId))
+    .limit(1);
+  if (!row) throw new Error("Este usuario no está vinculado a ningún roster");
+  return row.trainerId;
 }
 
 /* ───────────────────────── Chat ───────────────────────── */
